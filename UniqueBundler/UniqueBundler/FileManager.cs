@@ -1,4 +1,6 @@
-﻿using YamlDotNet.RepresentationModel;
+﻿using System.Text;
+using YamlDotNet.Core.Tokens;
+using YamlDotNet.RepresentationModel;
 
 namespace UniqueBundler
 {
@@ -10,7 +12,6 @@ namespace UniqueBundler
             LoadClassExtensions();
         }
 
-        #region ClassFieldData
         public struct ClassFieldData
         {
             public string name;
@@ -18,6 +19,7 @@ namespace UniqueBundler
             public bool isUse;
         }
 
+        #region ClassData
         private void LoadClassConfig()
         {
             // Check file
@@ -184,6 +186,55 @@ namespace UniqueBundler
                 yaml.Load(reader);
             return yaml;
         }
+        #endregion
+
+        #region Data
+        private List<byte> GetBytes(ClassFieldData[] classFieldDatas)
+        {
+            List<byte> datas = new List<byte>(classFieldDatas.Length);
+            foreach (ClassFieldData classFieldData in classFieldDatas)
+            {
+                bool isUse = classFieldData.isUse;
+                datas.AddRange(BitConverter.GetBytes(isUse));
+                datas.AddRange(ConvertBytes(classFieldData.data));
+            }
+
+            return datas;
+        }
+
+        private List<byte> ConvertBytes(object obj)
+        {
+            List<byte> datas = new List<byte>();
+
+            if (obj is int intValue)
+                datas.AddRange(BitConverter.GetBytes(intValue));
+            else if (obj is float floatValue)
+                datas.AddRange(BitConverter.GetBytes(floatValue));
+            else if (obj is double doubleValue)
+                datas.AddRange(BitConverter.GetBytes(doubleValue));
+            else if (obj is bool boolValue)
+                datas.AddRange(BitConverter.GetBytes(boolValue));
+            else if (obj is string stringValue)
+            {
+                byte[] stringBytes = Encoding.UTF8.GetBytes(stringValue);
+                datas.AddRange(BitConverter.GetBytes((uint)stringBytes.Length));
+                datas.AddRange(stringBytes);
+            }
+            else if (obj is byte[] byteArray)
+            {
+                datas.AddRange(BitConverter.GetBytes((long)byteArray.Length));
+                datas.AddRange(byteArray);
+            }
+            else if (obj is object[] objectArray)
+            {
+                datas.AddRange(BitConverter.GetBytes((uint)objectArray.Length));
+                foreach (var element in objectArray)
+                    datas.AddRange(ConvertBytes(element));
+            }
+
+            return datas;
+        }
+
         #endregion
 
         public string[] GetLineValue(string fileName)
