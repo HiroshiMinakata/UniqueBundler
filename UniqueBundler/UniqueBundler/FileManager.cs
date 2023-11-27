@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Reflection;
 using System.Text;
 using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
@@ -219,7 +220,6 @@ namespace UniqueBundler
 
         private void GetObjectSize(object obj, ref long size)
         {
-            Type type = obj.GetType();
             if (obj is int intValue)
                 size += sizeof(int);
             else if (obj is float floatValue)
@@ -257,14 +257,14 @@ namespace UniqueBundler
             {
                 str += classFieldData.name;
                 str += " = ";
-                GetObjectString(classFieldData.data, ref str);
+                Object2String(classFieldData.data, ref str);
                 str += "\n";
             }
 
             return str;
         }
 
-        private void GetObjectString(object obj, ref string str, string separator = "")
+        public static void Object2String(object obj, ref string str, string separator = "")
         {
             if (obj is int intValue)
                 str += intValue.ToString() + separator;
@@ -287,10 +287,42 @@ namespace UniqueBundler
             {
                 str += "[";
                 foreach (var element in objectArray)
-                    GetObjectString(element, ref str, ", ");
+                    Object2String(element, ref str, ", ");
                 str = str.Substring(0, str.Length - 2);
                 str += "]";
             }
+        }
+        public static object String2Object(string str, object sample)
+        {
+            if (sample is int && int.TryParse(str, out int intValue))
+                return intValue;
+            else if (sample is float && float.TryParse(str, out float floatValue))
+                return floatValue;
+            else if (sample is double && double.TryParse(str, out double doubleValue))
+                return doubleValue;
+            else if (sample is bool && bool.TryParse(str, out bool boolValue))
+                return boolValue;
+            else if (sample is byte[])
+            {
+                return sample;
+            }
+            else if (sample is List<object>)
+            {
+                if (str.StartsWith("[") && str.EndsWith("]"))
+                {
+                    str = str.Substring(1, str.Length - 2);
+                    string[] elements = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    List<object> objects = new List<object>();
+                    foreach (var element in elements)
+                    {
+                        string trimmedElement = element.Trim();
+                        object elementObj = String2Object(trimmedElement, sample);
+                        objects.Add(elementObj);
+                    }
+                    return objects;
+                }
+            }
+            return str;
         }
 
         #endregion
@@ -328,7 +360,7 @@ namespace UniqueBundler
         public readonly string AllFileFilter = "All files (*.*)|*.*";
         public readonly string ABFileFilter = "AssetBundle (*.ab*)|*.ab*";
 
-        private string FormatFileSize(long bytes)
+        private static string FormatFileSize(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
             double len = bytes;

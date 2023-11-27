@@ -17,6 +17,8 @@ namespace UniqueBundler
             AssetClass.Items.AddRange(file.GetClassNames());
         }
 
+        #region Event
+        // Add File
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string[] fileNames = file.GetNames(file.AllFileFilter, false);
@@ -27,6 +29,12 @@ namespace UniqueBundler
                 SetValues(datas[2]);
             }
         }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int field = 4;
+            if (e.ColumnIndex == field) OpenFieldForm(e.RowIndex);
+        }
+        #endregion
 
         private void SetLine(string[] values, int targetRow = -1)
         {
@@ -54,11 +62,20 @@ namespace UniqueBundler
         private void SetValues(string className, int targetRow = -1)
         {
             if (targetRow == -1)
-                assetDatas.Add(file.GetDefaultFieldDatas(className));
+                assetsDatas.Add(file.GetDefaultFieldDatas(className));
             else
-                assetDatas[targetRow] = file.GetDefaultFieldDatas(className);
+                assetsDatas[targetRow] = file.GetDefaultFieldDatas(className);
+        }
+        private void OpenFieldForm(int row)
+        {
+            if (assetsDatas.Count <= row) return;
+            FieldForm propertyForm = new FieldForm(assetsDatas[row]);
+            if (propertyForm.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
 
-        List<FileManager.ClassFieldData[]> assetDatas = new List<FileManager.ClassFieldData[]>();
+        List<FileManager.ClassFieldData[]> assetsDatas = new List<FileManager.ClassFieldData[]>();
     }
 }
