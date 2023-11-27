@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             dataGridView1 = new DataGridView();
-            Name = new DataGridViewTextBoxColumn();
-            Value = new DataGridViewTextBoxColumn();
+            FieldName = new DataGridViewTextBoxColumn();
+            FieldValue = new DataGridViewTextBoxColumn();
             IsUse = new DataGridViewCheckBoxColumn();
             Cancel = new Button();
             OK = new Button();
@@ -41,7 +41,7 @@
             // 
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Name, Value, IsUse });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { FieldName, FieldValue, IsUse });
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
@@ -51,19 +51,19 @@
             // 
             // Name
             // 
-            Name.HeaderText = "Name";
-            Name.MinimumWidth = 10;
-            Name.Name = "Name";
-            Name.ReadOnly = true;
-            Name.Width = 200;
+            FieldName.HeaderText = "Name";
+            FieldName.MinimumWidth = 10;
+            FieldName.Name = "Name";
+            FieldName.ReadOnly = true;
+            FieldName.Width = 200;
             // 
             // Value
             // 
-            Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            Value.HeaderText = "Value";
-            Value.MinimumWidth = 10;
-            Value.Name = "Value";
-            Value.ReadOnly = true;
+            FieldValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FieldValue.HeaderText = "Value";
+            FieldValue.MinimumWidth = 10;
+            FieldValue.Name = "Value";
+            FieldValue.ReadOnly = true;
             // 
             // IsUse
             // 
@@ -108,8 +108,8 @@
         #endregion
 
         private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn Name;
-        private DataGridViewTextBoxColumn Value;
+        private DataGridViewTextBoxColumn FieldName;
+        private DataGridViewTextBoxColumn FieldValue;
         private DataGridViewCheckBoxColumn IsUse;
         private Button Cancel;
         private Button OK;
