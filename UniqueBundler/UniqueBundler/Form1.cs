@@ -59,6 +59,6 @@ namespace UniqueBundler
                 assetDatas[targetRow] = file.GetDefaultFieldDatas(className);
         }
 
-        List<FileManager.ClassFieldData[]> assetDatas;
+        List<FileManager.ClassFieldData[]> assetDatas = new List<FileManager.ClassFieldData[]>();
     }
 }

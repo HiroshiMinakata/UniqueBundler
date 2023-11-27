@@ -7,9 +7,10 @@ namespace UniqueBundler
         public FileManager()
         {
             LoadClassConfig();
+            LoadClassExtensions();
         }
 
-        #region Yaml for ClassFieldData
+        #region ClassFieldData
         public struct ClassFieldData
         {
             public string name;
@@ -30,7 +31,7 @@ namespace UniqueBundler
             if(classNames != null) return classNames;
 
             // Load yaml
-            YamlStream yaml = LoadYaml();
+            YamlStream yaml = LoadYaml(classConfigPath);
 
             // Get top node
             YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
@@ -42,14 +43,13 @@ namespace UniqueBundler
             classNames = keys.ToArray();
             return classNames;
         }
-        private string[] classNames;
 
         private ClassFieldData[][] GetDefaultClassFieldData()
         {
             if(classesDefaultFieldDatas != null) return classesDefaultFieldDatas;
 
             // Load yaml
-            YamlStream yaml = LoadYaml();
+            YamlStream yaml = LoadYaml(classConfigPath);
 
             // Get top node
             YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
@@ -81,9 +81,8 @@ namespace UniqueBundler
         public ClassFieldData[] GetDefaultFieldDatas(string className)
         {
             int classIndex = Array.IndexOf(classNames, className);
-            return classesDefaultFieldDatas[classIndex];
+            return GetDefaultClassFieldData()[classIndex];
         }
-        private ClassFieldData[][] classesDefaultFieldDatas;
 
         private static object ParseData(YamlNode node)
         {
@@ -139,23 +138,49 @@ namespace UniqueBundler
             string text = "None:\r\n  Data:\r\n    - !!binary\r\n    - true";
             File.WriteAllText(classConfigPath, text);
         }
+
+        private string[] classNames;
+        private ClassFieldData[][] classesDefaultFieldDatas;
         private const string classConfigPath = "ClassConfig.yaml";
         #endregion
 
-        #region Yaml for Extension
-        private void LoadClassExtension()
+        #region Extension
+        private void LoadClassExtensions()
         {
+            YamlStream yaml = LoadYaml(ClassExtrensionsPath);
+            var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 
+            var classesList = new List<string[]>();
+            foreach (var entry in mapping)
+            {
+                string key = entry.Key.ToString();
+                string[] extensions = ((YamlSequenceNode)entry.Value).Children
+                                  .Select(node => node.ToString()).ToArray();
+                classesList.Add(extensions);
+            }
+
+            classesExtensions = classesList.ToArray();
+        }
+
+        public string GetClassName(string extension)
+        {
+            int classIndex = 0;
+            for (int i = 0; i < classesExtensions.Length; i++)
+                if (Array.IndexOf(classesExtensions[i], extension) != -1)
+                    classIndex = i;
+
+            return GetClassNames()[classIndex];
         }
 
         private string[][] classesExtensions;
+        private const string ClassExtrensionsPath = "Extensions.yaml"; 
         #endregion
 
         #region Yaml
-        private YamlStream LoadYaml()
+        private YamlStream LoadYaml(string path)
         {
             YamlStream yaml = new YamlStream();
-            using (var reader = new StreamReader(classConfigPath))
+            using (var reader = new StreamReader(path))
                 yaml.Load(reader);
             return yaml;
         }
@@ -166,7 +191,7 @@ namespace UniqueBundler
             FileInfo fi = new FileInfo(fileName);
             string assetName = Path.GetFileNameWithoutExtension(fi.Name);
             string extension = fi.Extension.Substring(1);
-            string className = "None";
+            string className = GetClassName(extension);
             string size = "a";
             string field = "a";
             return new string[] { assetName, extension, className, size, field };
