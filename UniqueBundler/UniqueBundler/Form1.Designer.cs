@@ -121,14 +121,15 @@
             // loadBundleToolStripMenuItem
             // 
             loadBundleToolStripMenuItem.Name = "loadBundleToolStripMenuItem";
-            loadBundleToolStripMenuItem.Size = new Size(140, 22);
+            loadBundleToolStripMenuItem.Size = new Size(180, 22);
             loadBundleToolStripMenuItem.Text = "Load Bundle";
             // 
             // addFileToolStripMenuItem
             // 
             addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(140, 22);
+            addFileToolStripMenuItem.Size = new Size(180, 22);
             addFileToolStripMenuItem.Text = "Add File";
+            addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
@@ -153,7 +154,7 @@
             // openClassConfigToolStripMenuItem
             // 
             openClassConfigToolStripMenuItem.Name = "openClassConfigToolStripMenuItem";
-            openClassConfigToolStripMenuItem.Size = new Size(168, 22);
+            openClassConfigToolStripMenuItem.Size = new Size(180, 22);
             openClassConfigToolStripMenuItem.Text = "Open Class config";
             // 
             // Form1
