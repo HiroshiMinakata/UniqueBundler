@@ -8,22 +8,29 @@ namespace UniqueBundler
             public bool isUse;
         }
 
+        private FileManager file;
+
         public Form1()
         {
             InitializeComponent();
+            file = new FileManager();
+            AssetClass.Items.AddRange(file.GetClassNames());
         }
 
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] fileNames = File.GetNames(File.AllFileFilter, false);
+            string[] fileNames = file.GetNames(file.AllFileFilter, false);
             foreach (string fileName in fileNames)
-                SetLine(File.GetLineValue(fileName));
+            {
+                string[] datas = file.GetLineValue(fileName);
+                SetLine(datas);
+                SetValues(datas[2]);
+            }
         }
 
         private void SetLine(string[] values, int targetRow = -1)
         {
             int colNum = dataGridView1.Columns.Count;
-            int rowNum = dataGridView1.Rows.Count;
 
 #if DEBUG
             // Check values length
@@ -31,15 +38,27 @@ namespace UniqueBundler
                 throw new ArgumentException($"'values' should have {colNum} elements.");
 
             // Check value
-            foreach (string value in values )
+            foreach (string value in values)
                 if (value == null || value == "")
                     throw new ArgumentException($"'values' can't have null or empty string.");
 #endif
 
             // Set values
-            if (targetRow == -1) targetRow = rowNum - 1;
-            for(int col = 0; col < colNum; col++)
-                dataGridView1.Rows[targetRow].Cells[col].Value = values[col];
+            if (targetRow == -1)
+                dataGridView1.Rows.Add(values);
+            else
+                for (int col = 0; col < colNum; col++)
+                    dataGridView1.Rows[targetRow].Cells[col].Value = values[col];
         }
+
+        private void SetValues(string className, int targetRow = -1)
+        {
+            if (targetRow == -1)
+                assetDatas.Add(file.GetDefaultFieldDatas(className));
+            else
+                assetDatas[targetRow] = file.GetDefaultFieldDatas(className);
+        }
+
+        List<FileManager.ClassFieldData[]> assetDatas;
     }
 }
