@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Text;
 using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
+using static UniqueBundler.FileManager;
 
 namespace UniqueBundler
 {
@@ -23,7 +25,7 @@ namespace UniqueBundler
         private void LoadClassConfig()
         {
             // Check file
-            if (!File.Exists(classConfigPath)) CreateClassConfig();
+            if (!File.Exists(ClassConfigPath)) CreateClassConfig();
             GetClassNames();
             GetDefaultClassFieldData();
         }
@@ -33,7 +35,7 @@ namespace UniqueBundler
             if(classNames != null) return classNames;
 
             // Load yaml
-            YamlStream yaml = LoadYaml(classConfigPath);
+            YamlStream yaml = LoadYaml(ClassConfigPath);
 
             // Get top node
             YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
@@ -51,7 +53,7 @@ namespace UniqueBundler
             if(classesDefaultFieldDatas != null) return classesDefaultFieldDatas;
 
             // Load yaml
-            YamlStream yaml = LoadYaml(classConfigPath);
+            YamlStream yaml = LoadYaml(ClassConfigPath);
 
             // Get top node
             YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
@@ -68,7 +70,7 @@ namespace UniqueBundler
                     var classFieldData = new ClassFieldData
                     {
                         name = item.Key.ToString(),
-                        data = ParseData(item.Value[0]),
+                        data = ParseNode(item.Value[0]),
                         isUse = bool.Parse(item.Value[1].ToString())
                     };
                     classFields.Add(classFieldData);
@@ -86,7 +88,7 @@ namespace UniqueBundler
             return GetDefaultClassFieldData()[classIndex];
         }
 
-        private static object ParseData(YamlNode node)
+        private static object ParseNode(YamlNode node)
         {
             // Scalar
             if (node is YamlScalarNode scalar)
@@ -113,7 +115,7 @@ namespace UniqueBundler
             {
                 List<object> objects = new List<object>();
                 foreach (var element in sequence)
-                    objects.Add(ParseData(element));
+                    objects.Add(ParseNode(element));
                 return objects;
             }
             
@@ -123,8 +125,8 @@ namespace UniqueBundler
                 var dict = new Dictionary<string, object>();
                 foreach (var entry in mapping)
                 {
-                    var key = ParseData(entry.Key).ToString();
-                    var value = ParseData(entry.Value);
+                    var key = ParseNode(entry.Key).ToString();
+                    var value = ParseNode(entry.Value);
                     dict[key] = value;
                 }
                 return dict;
@@ -138,17 +140,29 @@ namespace UniqueBundler
         private void CreateClassConfig()
         {
             string text = "None:\r\n  Data:\r\n    - !!binary\r\n    - true";
-            File.WriteAllText(classConfigPath, text);
+            File.WriteAllText(ClassConfigPath, text);
         }
 
         private string[] classNames;
         private ClassFieldData[][] classesDefaultFieldDatas;
-        private const string classConfigPath = "ClassConfig.yaml";
+        private const string ClassConfigPath = "ClassConfig.yaml";
         #endregion
 
         #region Extension
         private void LoadClassExtensions()
         {
+            if (!File.Exists(ClassExtrensionsPath)) CreateClassesExtensions();
+            GetClassesExtensions();
+        }
+        private void CreateClassesExtensions()
+        {
+            string text = "None: [\"\"]";
+            File.WriteAllText(ClassExtrensionsPath, text);
+        }
+
+        private string[][] GetClassesExtensions()
+        {
+            if (classesExtensions != null) return classesExtensions;
             YamlStream yaml = LoadYaml(ClassExtrensionsPath);
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 
@@ -162,6 +176,7 @@ namespace UniqueBundler
             }
 
             classesExtensions = classesList.ToArray();
+            return classesExtensions;
         }
 
         public string GetClassName(string extension)
@@ -189,50 +204,93 @@ namespace UniqueBundler
         #endregion
 
         #region Data
-        private List<byte> GetBytes(ClassFieldData[] classFieldDatas)
+        private long GetSize(ClassFieldData[] classFieldDatas)
         {
-            List<byte> datas = new List<byte>(classFieldDatas.Length);
+            long size = 0;
             foreach (ClassFieldData classFieldData in classFieldDatas)
             {
-                bool isUse = classFieldData.isUse;
-                datas.AddRange(BitConverter.GetBytes(isUse));
-                datas.AddRange(ConvertBytes(classFieldData.data));
+                // classFieldData.isUse
+                size += sizeof(bool);
+                GetObjectSize(classFieldData.data, ref size);
             }
 
-            return datas;
+            return size;
         }
 
-        private List<byte> ConvertBytes(object obj)
+        private void GetObjectSize(object obj, ref long size)
         {
-            List<byte> datas = new List<byte>();
-
+            Type type = obj.GetType();
             if (obj is int intValue)
-                datas.AddRange(BitConverter.GetBytes(intValue));
+                size += sizeof(int);
             else if (obj is float floatValue)
-                datas.AddRange(BitConverter.GetBytes(floatValue));
+                size += sizeof(float);
             else if (obj is double doubleValue)
-                datas.AddRange(BitConverter.GetBytes(doubleValue));
+                size += sizeof(double);
             else if (obj is bool boolValue)
-                datas.AddRange(BitConverter.GetBytes(boolValue));
+                size += sizeof(bool);
             else if (obj is string stringValue)
             {
-                byte[] stringBytes = Encoding.UTF8.GetBytes(stringValue);
-                datas.AddRange(BitConverter.GetBytes((uint)stringBytes.Length));
-                datas.AddRange(stringBytes);
+                size += sizeof(int);
+                size += sizeof(char) * stringValue.Length;
             }
             else if (obj is byte[] byteArray)
             {
-                datas.AddRange(BitConverter.GetBytes((long)byteArray.Length));
-                datas.AddRange(byteArray);
+                size += sizeof(int);
+                string fileName = Encoding.UTF8.GetString(byteArray);
+                if (!File.Exists(fileName)) return;
+                FileInfo fileInfo = new FileInfo(fileName);
+                size += fileInfo.Length;
             }
-            else if (obj is object[] objectArray)
+            else if (obj is List<object> objectArray)
             {
-                datas.AddRange(BitConverter.GetBytes((uint)objectArray.Length));
+                size += sizeof(int);
                 foreach (var element in objectArray)
-                    datas.AddRange(ConvertBytes(element));
+                    GetObjectSize(element, ref size);
+            }
+        }
+        
+        private string GetFieldString(ClassFieldData[] classFieldDatas)
+        {
+            string str = "";
+
+            foreach (ClassFieldData classFieldData in classFieldDatas)
+            {
+                str += classFieldData.name;
+                str += " = ";
+                GetObjectString(classFieldData.data, ref str);
+                str += "\n";
             }
 
-            return datas;
+            return str;
+        }
+
+        private void GetObjectString(object obj, ref string str, string separator = "")
+        {
+            if (obj is int intValue)
+                str += intValue.ToString() + separator;
+            else if (obj is float floatValue)
+                str += floatValue.ToString() + separator;
+            else if (obj is double doubleValue)
+                str += doubleValue.ToString() + separator;
+            else if (obj is bool boolValue)
+                str += boolValue.ToString() + separator;
+            else if (obj is string stringValue)
+                str += stringValue + separator;
+            else if (obj is byte[] byteArray)
+            {
+                string fileName = Encoding.UTF8.GetString(byteArray);
+                if (!File.Exists(fileName)) return;
+                FileInfo fileInfo = new FileInfo(fileName);
+                str += FormatFileSize(fileInfo.Length) + separator;
+            }
+            else if (obj is List<object> objectArray)
+            {
+                str += "[";
+                foreach (var element in objectArray)
+                    GetObjectString(element, ref str, ", ");
+                str = str.Substring(0, str.Length - 2);
+                str += "]";
+            }
         }
 
         #endregion
@@ -243,8 +301,10 @@ namespace UniqueBundler
             string assetName = Path.GetFileNameWithoutExtension(fi.Name);
             string extension = fi.Extension.Substring(1);
             string className = GetClassName(extension);
-            string size = "a";
-            string field = "a";
+            ClassFieldData[] fieldData = GetDefaultFieldDatas(className);
+            fieldData[0].data = Encoding.UTF8.GetBytes(fileName);
+            string size = FormatFileSize(GetSize(fieldData));
+            string field = GetFieldString(fieldData);
             return new string[] { assetName, extension, className, size, field };
         }
 
