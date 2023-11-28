@@ -214,8 +214,18 @@ namespace UniqueBundler
 
         private void ChangeValue(int row, string newClassName)
         {
-            if (row <= 0) return;
+            if (row < 0) return;
+
+            ClassFieldData[] oldData = GetData(row);
             ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
+
+            // Copy data
+            int minLength = Math.Min(oldData.Length, newData.Length);
+            for (int i = 0; i < minLength; i++)
+                if (newData[i].name == oldData[i].name)
+                    newData[i].data = oldData[i].data;
+
+            // Set data
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
         }
 
