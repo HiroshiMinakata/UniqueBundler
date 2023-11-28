@@ -160,6 +160,7 @@ namespace UniqueBundler
         {
             foreach (string fileName in fileNames)
             {
+                if (fileName == "") break;
                 string[] datas = file.GetLineValue(fileName);
                 if (datas == null) continue;
                 SetLine(datas);
@@ -187,8 +188,7 @@ namespace UniqueBundler
             if (targetRow == -1)
                 dataGridView1.Rows.Add(values);
             else
-                for (int col = 0; col < colNum; col++)
-                    dataGridView1.Rows[targetRow].Cells[col].Value = values[col];
+                dataGridView1.Rows[targetRow].SetValues(values);
         }
 
         private void SetValues(string className, int targetRow = -1)
@@ -209,8 +209,9 @@ namespace UniqueBundler
                 ReloadSize(row);
         }
 
-        private long ReloadSize(int row)
+        private long ReloadSize(int row = -1)
         {
+            if (row == -1) row = dataGridView1.Rows.Count - 1;
             long size = 0;
 
             string assetName = dataGridView1.Rows[row].Cells[0].Value?.ToString() ?? "";
@@ -276,6 +277,7 @@ namespace UniqueBundler
 
             // Set data
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
+            ReloadSize(row);
         }
 
         private void InitializeData(int row)
@@ -293,6 +295,19 @@ namespace UniqueBundler
         {
             ClassFieldData[] data = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
             return data;
+        }
+
+        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.IsCurrentCellDirty)
+            {
+                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+
         }
     }
 }

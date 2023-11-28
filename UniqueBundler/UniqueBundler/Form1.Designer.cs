@@ -67,6 +67,8 @@
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
             dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
+            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
+            dataGridView1.RowsAdded += dataGridView1_RowsAdded;
             dataGridView1.UserAddedRow += dataGridView1_UserAddedRow;
             dataGridView1.DragDrop += dataGridView1_DragDrop;
             dataGridView1.DragEnter += dataGridView1_DragEnter;
@@ -132,7 +134,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(2242, 42);
+            menuStrip1.Size = new Size(2242, 40);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -140,7 +142,7 @@
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadBundleToolStripMenuItem, addFileToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(71, 38);
+            fileToolStripMenuItem.Size = new Size(71, 36);
             fileToolStripMenuItem.Text = "File";
             // 
             // loadBundleToolStripMenuItem
@@ -160,13 +162,13 @@
             // 
             saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem });
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(84, 38);
+            saveToolStripMenuItem.Size = new Size(84, 36);
             saveToolStripMenuItem.Text = "Save";
             // 
             // saveBundleToolStripMenuItem
             // 
             saveBundleToolStripMenuItem.Name = "saveBundleToolStripMenuItem";
-            saveBundleToolStripMenuItem.Size = new Size(359, 44);
+            saveBundleToolStripMenuItem.Size = new Size(279, 44);
             saveBundleToolStripMenuItem.Text = "Save Bundle";
             saveBundleToolStripMenuItem.Click += saveBundleToolStripMenuItem_Click;
             // 
@@ -174,7 +176,7 @@
             // 
             optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
             optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            optionToolStripMenuItem.Size = new Size(108, 38);
+            optionToolStripMenuItem.Size = new Size(108, 36);
             optionToolStripMenuItem.Text = "Option";
             // 
             // openClassConfigToolStripMenuItem
