@@ -207,7 +207,11 @@ namespace UniqueBundler
             //totalSize += sizeof(long) * 2;
 
             for (int row = 0; row < dataGridView1.RowCount; row++)
+            {
+                string isInclude = dataGridView1.Rows[row].Cells[IsIncludeIndex].Value?.ToString() ?? "False";
+                if (isInclude == "False") continue;
                 totalSize += ReloadSize(row);
+            }
 
             return totalSize;
         }
@@ -231,7 +235,7 @@ namespace UniqueBundler
 
         private void InitializeData(int row)
         {
-            string[] datas = { "", "", file.GetClassNames()[0], "", "", "false" };
+            string[] datas = { "", "", file.GetClassNames()[0], "", "", "False" };
             string className = datas[2];
             ClassFieldData[] data = file.GetDefaultFieldDatas(className).ToArray();
             dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[IsIncludeIndex].Tag = data;
