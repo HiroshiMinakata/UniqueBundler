@@ -13,6 +13,8 @@ namespace UniqueBundler
         }
 
         private FileManager file;
+        private const int AssetNameIndex = 0;
+        private const int FormatIndex = 0;
         private const int ClassIndex = 2;
         private const int SizeIndex = 3;
         private const int FieldIndex = 4;
@@ -30,7 +32,7 @@ namespace UniqueBundler
         // Add file
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] fileNames = file.GetNames(file.AllFileFilter, true);
+            string[] fileNames = GetOpenFileNames(AllFileFilter, true);
             AddDatas(fileNames);
         }
 
@@ -109,7 +111,47 @@ namespace UniqueBundler
                     direction == ListSortDirection.Ascending ? SortOrder.Ascending : SortOrder.Descending;
             }
         }
+
+        // Save
+        private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int assetNum = GetAssetNum();
+            if (assetNum == 0) return;
+            ClassFieldData[][] assetsDatas = new ClassFieldData[assetNum][];
+            string[] assetNames = new string[assetNum];
+            string[] formats = new string[assetNum];
+            string[] classNames = new string[assetNum];
+
+            GetWriteAssetsDatas(assetsDatas, assetNames, classNames, formats);
+            string saveFileName = GetSaveFileName(".ab", ABFileFilter);
+            if (saveFileName == "") return;
+            WriteBundle writeBundle = new WriteBundle(1, assetNames, assetsDatas, formats, classNames, saveFileName);
+
+            writeBundle.NormalWrite();
+        }
         #endregion
+
+        private int GetAssetNum()
+        {
+            int assetNum = 0;
+            for (int row = 0; row < dataGridView1.RowCount; row++)
+                if (dataGridView1.Rows[row].Cells[IsIncludeIndex].Value.ToString() == "True") assetNum++;
+            return assetNum;
+        }
+
+        private void GetWriteAssetsDatas(ClassFieldData[][] assetsDatas, string[] assetNames, string[] classNames, string[] formats)
+        {
+            int num = 0;
+            for (int row = 0; row < dataGridView1.RowCount; row++)
+            {
+                if (dataGridView1.Rows[row].Cells[IsIncludeIndex].Value.ToString() == "False") continue;
+                assetsDatas[num] = GetData(row);
+                assetNames[num] = dataGridView1.Rows[row].Cells[AssetNameIndex].Value.ToString();
+                formats[num] = dataGridView1.Rows[row].Cells[FormatIndex].Value.ToString();
+                classNames[num] = dataGridView1.Rows[row].Cells[ClassIndex].Value.ToString();
+                num++;
+            }
+        }
 
         private void AddDatas(string[] fileNames)
         {

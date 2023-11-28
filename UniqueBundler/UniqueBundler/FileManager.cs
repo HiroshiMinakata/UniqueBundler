@@ -6,46 +6,6 @@ using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
 using static UniqueBundler.FileManager;
 
-/*
-* .ab (AssetBundle file)
-* 
-* ----- Header -----
-* int varsion;
-* int headerSize;
-* long metaDataSize;
-* long dataSize;
-* int footerSize;
-* int assetNum;
-* 
-* ----- MetaData -----
-* // for the number of Asset
-* {
-*   int nameLength;
-*   string name;
-*   long offset;
-*   long size;
-* }
-* 
-* ----- Field -----
-* // for the number of Asset
-* {
-*	bool isUse;
-*   if byte[] : long length, data;
-*	if string : int length, string;
-*	if array : int length, anyData;
-*	else : anyData;
-* }
-* 
-* ----- Footer -----
-* // for the number of Asset
-* {
-*   int formatLength;
-*   string format;
-*   int typeLength;
-*   string type;
-* }
-*/
-
 namespace UniqueBundler
 {
     public class FileManager
@@ -282,10 +242,7 @@ namespace UniqueBundler
             else if (obj is bool boolValue)
                 size += sizeof(bool);
             else if (obj is string stringValue)
-            {
-                size += sizeof(int);
                 size += sizeof(char) * stringValue.Length;
-            }
             else if (obj is byte[] byteArray)
             {
                 size += sizeof(int);
@@ -356,10 +313,8 @@ namespace UniqueBundler
             else if (sample is bool && bool.TryParse(str, out bool boolValue))
                 return boolValue;
             else if (sample is byte[])
-            {
                 return sample;
-            }
-            else if (sample is List<object>)
+            else if (sample is List<object> samples)
             {
                 if (str.StartsWith("[") && str.EndsWith("]"))
                 {
@@ -369,7 +324,7 @@ namespace UniqueBundler
                     foreach (var element in elements)
                     {
                         string trimmedElement = element.Trim();
-                        object elementObj = String2Object(trimmedElement, sample);
+                        object elementObj = String2Object(trimmedElement, samples[0]);
                         objects.Add(elementObj);
                     }
                     return objects;
@@ -404,23 +359,43 @@ namespace UniqueBundler
 
         /// <summary>
         /// Displays a file open dialog and returns the names of the selected files.
+        /// AllFileFilter, ABFileFilter
         /// </summary>
         /// <param name="filter">Filter string to use in file dialogs.</param>
         /// <param name="multiSelect">Allow multiple selection of files.</param>
         /// <returns>Names of the selected files. Empty string if canceled.</returns>
-        public string[] GetNames(string filter, bool multiSelect)
+        public static string[] GetOpenFileNames(string filter, bool multiSelect)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = filter;
-                openFileDialog.Multiselect = multiSelect;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    return openFileDialog.FileNames;
-            }
-            return Array.Empty<string>();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = filter;
+            openFileDialog.Multiselect = multiSelect;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                return openFileDialog.FileNames;
+            else
+                return Array.Empty<string>();
         }
-        public readonly string AllFileFilter = "All files (*.*)|*.*";
-        public readonly string ABFileFilter = "AssetBundle (*.ab*)|*.ab*";
+
+        /// <summary>
+        /// Displays a file save dialog and returns the names of the selected files.
+        /// AllFileFilter, ABFileFilter
+        /// </summary>
+        /// <param name="fileName">Default name.</param>
+        /// <param name="filter">Filter string to use in file dialogs.</param>
+        /// <returns>Names of the selected files. Empty string if canceled.</returns>
+        public static string GetSaveFileName(string fileName, string filter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = fileName;
+            saveFileDialog.Filter = filter;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                return saveFileDialog.FileName;
+            else
+                return string.Empty;
+        }
+        public static string AllFileFilter = "All files (*.*)|*.*";
+        public static string ABFileFilter = "AssetBundle (*.ab*)|*.ab*";
 
         public static string FormatFileSize(long bytes)
         {
