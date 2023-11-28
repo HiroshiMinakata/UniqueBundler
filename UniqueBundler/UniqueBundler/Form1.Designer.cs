@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
@@ -142,6 +144,8 @@
             // 
             // AssetExtension
             // 
+            dataGridViewCellStyle1.BackColor = Color.LightGray;
+            AssetExtension.DefaultCellStyle = dataGridViewCellStyle1;
             AssetExtension.HeaderText = "Extension";
             AssetExtension.MinimumWidth = 10;
             AssetExtension.Name = "AssetExtension";
@@ -158,6 +162,8 @@
             // 
             // AssetSize
             // 
+            dataGridViewCellStyle2.BackColor = Color.LightGray;
+            AssetSize.DefaultCellStyle = dataGridViewCellStyle2;
             AssetSize.HeaderText = "Size";
             AssetSize.MinimumWidth = 10;
             AssetSize.Name = "AssetSize";
@@ -168,9 +174,9 @@
             // AssetField
             // 
             AssetField.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            AssetField.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            AssetField.DefaultCellStyle = dataGridViewCellStyle3;
             AssetField.HeaderText = "Field";
             AssetField.MinimumWidth = 10;
             AssetField.Name = "AssetField";

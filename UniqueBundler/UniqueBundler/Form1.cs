@@ -17,7 +17,6 @@ namespace UniqueBundler
         private const int SizeIndex = 3;
         private const int FieldIndex = 4;
         private const int IsIncludeIndex = 5;
-        //List<ClassFieldData[]> assetsDatas = new List<ClassFieldData[]>();
 
         public Form1()
         {
@@ -215,7 +214,7 @@ namespace UniqueBundler
 
         private void ChangeValue(int row, string newClassName)
         {
-            if(row <= 0) return;
+            if (row <= 0) return;
             ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
         }

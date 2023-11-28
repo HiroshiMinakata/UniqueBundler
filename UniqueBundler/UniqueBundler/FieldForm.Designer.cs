@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
+            Cancel = new Button();
+            OK = new Button();
             FieldName = new DataGridViewTextBoxColumn();
             FieldValue = new DataGridViewTextBoxColumn();
             IsUse = new DataGridViewCheckBoxColumn();
-            Cancel = new Button();
-            OK = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -51,31 +52,6 @@
             dataGridView1.RowTemplate.Height = 41;
             dataGridView1.Size = new Size(883, 492);
             dataGridView1.TabIndex = 0;
-            // 
-            // FieldName
-            // 
-            FieldName.HeaderText = "Name";
-            FieldName.MinimumWidth = 10;
-            FieldName.Name = "FieldName";
-            FieldName.ReadOnly = true;
-            FieldName.SortMode = DataGridViewColumnSortMode.NotSortable;
-            FieldName.Width = 200;
-            // 
-            // FieldValue
-            // 
-            FieldValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FieldValue.HeaderText = "Value";
-            FieldValue.MinimumWidth = 10;
-            FieldValue.Name = "FieldValue";
-            FieldValue.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // IsUse
-            // 
-            IsUse.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            IsUse.HeaderText = "IsUse";
-            IsUse.MinimumWidth = 10;
-            IsUse.Name = "IsUse";
-            IsUse.Width = 75;
             // 
             // Cancel
             // 
@@ -98,6 +74,33 @@
             OK.Text = "OK";
             OK.UseVisualStyleBackColor = true;
             OK.Click += OK_Click;
+            // 
+            // FieldName
+            // 
+            dataGridViewCellStyle1.BackColor = Color.LightGray;
+            FieldName.DefaultCellStyle = dataGridViewCellStyle1;
+            FieldName.HeaderText = "Name";
+            FieldName.MinimumWidth = 10;
+            FieldName.Name = "FieldName";
+            FieldName.ReadOnly = true;
+            FieldName.SortMode = DataGridViewColumnSortMode.NotSortable;
+            FieldName.Width = 200;
+            // 
+            // FieldValue
+            // 
+            FieldValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FieldValue.HeaderText = "Value";
+            FieldValue.MinimumWidth = 10;
+            FieldValue.Name = "FieldValue";
+            FieldValue.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // IsUse
+            // 
+            IsUse.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            IsUse.HeaderText = "IsUse";
+            IsUse.MinimumWidth = 10;
+            IsUse.Name = "IsUse";
+            IsUse.Width = 75;
             // 
             // FieldForm
             // 
