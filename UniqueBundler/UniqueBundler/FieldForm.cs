@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace UniqueBundler
 {
@@ -29,9 +30,9 @@ namespace UniqueBundler
                 // File
                 if (assetData.data.GetType() == typeof(byte[]))
                 {
-                    dataGridView1.Rows[row].Cells[1].Tag = assetData.data;
                     DataGridViewButtonCell buttonCell = new DataGridViewButtonCell();
                     dataGridView1.Rows[row].Cells[1] = buttonCell;
+                    dataGridView1.Rows[row].Cells[1].Tag = assetData.data;
                 }
 
                 string value = "";
