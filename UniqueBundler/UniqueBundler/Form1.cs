@@ -93,7 +93,8 @@ namespace UniqueBundler
                 ChangeValue(row, newClassName);
             }
 
-            ReloadSize(row);
+            long totalSize = GetToalSize();
+            AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
         }
         #endregion
 
@@ -156,21 +157,25 @@ namespace UniqueBundler
             string extension = dataGridView1.Rows[row].Cells[1].Value?.ToString() ?? "";
             string className = dataGridView1.Rows[row].Cells[2].Value?.ToString() ?? "";
 
+            // Meta data
             // Asset name
             size += sizeof(int);
             size += assetName.Length;
+            // Offset
+            size += sizeof(long);
+            // Size
+            size += sizeof(long);
 
+            // Field
+            size += GetSize(assetsDatas[row]);
+
+            // Footer
             // Extension
             size += sizeof(int);
             size += extension.Length;
-
             // Class name
             size += sizeof(int);
             size += className.Length;
-
-            // Field
-            size += sizeof(int);
-            size += GetSize(assetsDatas[row]);
 
             // Set size
             dataGridView1.Rows[row].Cells[sizeIndex].Value = FormatFileSize(size);
@@ -178,7 +183,19 @@ namespace UniqueBundler
             return size;
         }
 
+        private long GetToalSize()
+        {
+            long totalSize = 0;
 
+            // Header size
+            //totalSize += sizeof(int) * 4;
+            //totalSize += sizeof(long) * 2;
+
+            for (int row = 0; row < dataGridView1.RowCount; row++)
+                totalSize += ReloadSize(row);
+
+            return totalSize;
+        }
 
         private void ChangeValue(int row, string newClassName)
         {

@@ -12,8 +12,8 @@ using static UniqueBundler.FileManager;
 * ----- Header -----
 * int varsion;
 * int headerSize;
-* int metaDataSize;
-* int dataSize;
+* long metaDataSize;
+* long dataSize;
 * int footerSize;
 * int assetNum;
 * 
@@ -22,21 +22,18 @@ using static UniqueBundler.FileManager;
 * {
 *   int nameLength;
 *   string name;
-*   int offset;
-*   int size;
+*   long offset;
+*   long size;
 * }
 * 
-* ----- Data -----
+* ----- Field -----
 * // for the number of Asset
 * {
-*   int size;
-*   // Datas
-*   {
-*		bool isUse;
-*		if string : int stringLength, string;
-*		if array : int arrayLength, anyData;
-*		else : anyData;
-*   }
+*	bool isUse;
+*   if byte[] : long length, data;
+*	if string : int length, string;
+*	if array : int length, anyData;
+*	else : anyData;
 * }
 * 
 * ----- Footer -----
