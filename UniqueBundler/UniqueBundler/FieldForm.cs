@@ -33,9 +33,11 @@ namespace UniqueBundler
         {
             for (int row = 0; row < dataGridView1.Rows.Count; row++)
             {
+                if (dataGridView1.Rows[row].Cells[1].Value == null) dataGridView1.Rows[row].Cells[1].Value = "";
                 string data = dataGridView1.Rows[row].Cells[1].Value.ToString();
                 assetDatas[row].data = FileManager.String2Object(data, assetDatas[row].data);
             }
+            DialogResult = DialogResult.OK;
             Close();
         }
 

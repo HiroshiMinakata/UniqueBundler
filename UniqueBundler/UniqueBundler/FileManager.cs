@@ -6,6 +6,49 @@ using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
 using static UniqueBundler.FileManager;
 
+/*
+* .ab (AssetBundle file)
+* 
+* ----- Header -----
+* int varsion;
+* int headerSize;
+* int metaDataSize;
+* int dataSize;
+* int footerSize;
+* int assetNum;
+* 
+* ----- MetaData -----
+* // for the number of Asset
+* {
+*   int nameLength;
+*   string name;
+*   int offset;
+*   int size;
+* }
+* 
+* ----- Data -----
+* // for the number of Asset
+* {
+*   int size;
+*   // Datas
+*   {
+*		bool isUse;
+*		if string : int stringLength, string;
+*		if array : int arrayLength, anyData;
+*		else : anyData;
+*   }
+* }
+* 
+* ----- Footer -----
+* // for the number of Asset
+* {
+*   int formatLength;
+*   string format;
+*   int typeLength;
+*   string type;
+* }
+*/
+
 namespace UniqueBundler
 {
     public class FileManager

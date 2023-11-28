@@ -1,3 +1,5 @@
+using static UniqueBundler.FileManager;
+
 namespace UniqueBundler
 {
     public partial class Form1 : Form
@@ -9,14 +11,17 @@ namespace UniqueBundler
         }
 
         private FileManager file;
+        private const int classIndex = 2;
         private const int sizeIndex = 3;
         private const int fieldIndex = 4;
+        List<ClassFieldData[]> assetsDatas = new List<ClassFieldData[]>();
 
         public Form1()
         {
             InitializeComponent();
             file = new FileManager();
             AssetClass.Items.AddRange(file.GetClassNames());
+            InitializeData(0);
         }
 
         #region Event
@@ -58,24 +63,36 @@ namespace UniqueBundler
         // Open class config
         private void openClassConfigToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileManager.OpenConfigFile();
+            OpenConfigFile();
         }
 
         // Open extension config
         private void openExtensionConfigToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileManager.OpenExtensionsFile();
+            OpenExtensionsFile();
         }
 
         // Add empty data
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
             int row = e.Row.Index - 1;
-            string[] datas = { "", "", "None", "", "" };
-            string className = datas[2];
-            assetsDatas.Add(file.GetDefaultFieldDatas(className));
-            SetLine(datas, row);
-            SetValues(className, row);
+            InitializeData(row + 1);
+        }
+
+        // Change value
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+
+            if (row < 0) return;
+            // Change class
+            if (col == classIndex)
+            {
+                string newClassName = dataGridView1.Rows[row].Cells[classIndex].Value.ToString();
+                ChangeValue(row, newClassName);
+            }
+
             ReloadSize(row);
         }
         #endregion
@@ -118,10 +135,11 @@ namespace UniqueBundler
         private void SetValues(string className, int targetRow = -1)
         {
             if (targetRow == -1)
-                assetsDatas.Add(file.GetDefaultFieldDatas(className));
+                assetsDatas.Add(file.GetDefaultFieldDatas(className).ToArray());
             else
-                assetsDatas[targetRow] = file.GetDefaultFieldDatas(className);
+                assetsDatas[targetRow] = file.GetDefaultFieldDatas(className).ToArray();
         }
+
         private void OpenFieldForm(int row)
         {
             if (assetsDatas.Count <= row) return;
@@ -130,12 +148,52 @@ namespace UniqueBundler
                 ReloadSize(row);
         }
 
-        private void ReloadSize(int row)
+        private long ReloadSize(int row)
         {
-            long size = FileManager.GetSize(assetsDatas[row]);
-            dataGridView1.Rows[row].Cells[sizeIndex].Value = FileManager.FormatFileSize(size);
+            long size = 0;
+
+            string assetName = dataGridView1.Rows[row].Cells[0].Value?.ToString() ?? "";
+            string extension = dataGridView1.Rows[row].Cells[1].Value?.ToString() ?? "";
+            string className = dataGridView1.Rows[row].Cells[2].Value?.ToString() ?? "";
+
+            // Asset name
+            size += sizeof(int);
+            size += assetName.Length;
+
+            // Extension
+            size += sizeof(int);
+            size += extension.Length;
+
+            // Class name
+            size += sizeof(int);
+            size += className.Length;
+
+            // Field
+            size += sizeof(int);
+            size += GetSize(assetsDatas[row]);
+
+            // Set size
+            dataGridView1.Rows[row].Cells[sizeIndex].Value = FormatFileSize(size);
+
+            return size;
         }
 
-        List<FileManager.ClassFieldData[]> assetsDatas = new List<FileManager.ClassFieldData[]>();
+
+
+        private void ChangeValue(int row, string newClassName)
+        {
+            ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
+            assetsDatas[row] = newData;
+        }
+
+        private void InitializeData(int row)
+        {
+            string[] datas = { "", "", file.GetClassNames()[0], "", "" };
+            string className = datas[2];
+            assetsDatas.Add(file.GetDefaultFieldDatas(className).ToArray());
+            SetLine(datas, row);
+            SetValues(className, row);
+            ReloadSize(row);
+        }
     }
 }
