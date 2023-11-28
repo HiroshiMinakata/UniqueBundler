@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Windows.Forms;
 using static UniqueBundler.FileManager;
 
 namespace UniqueBundler
@@ -115,16 +114,20 @@ namespace UniqueBundler
         // Save
         private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string saveFileName = GetSaveFileName(".ab", ABFileFilter);
+            if (saveFileName == "") return;
             int assetNum = GetAssetNum();
-            if (assetNum == 0) return;
+            if (assetNum == 0)
+            {
+                File.WriteAllText(saveFileName, "");
+                return;
+            }
             ClassFieldData[][] assetsDatas = new ClassFieldData[assetNum][];
             string[] assetNames = new string[assetNum];
             string[] formats = new string[assetNum];
             string[] classNames = new string[assetNum];
 
             GetWriteAssetsDatas(assetsDatas, assetNames, classNames, formats);
-            string saveFileName = GetSaveFileName(".ab", ABFileFilter);
-            if (saveFileName == "") return;
             WriteBundle writeBundle = new WriteBundle(1, assetNames, assetsDatas, formats, classNames, saveFileName);
 
             writeBundle.NormalWrite();
@@ -199,7 +202,7 @@ namespace UniqueBundler
 
         private void OpenFieldForm(int row)
         {
-            if (dataGridView1.Rows.Count <= row) return;
+            if (row >= dataGridView1.Rows.Count || row < 0) return;
             var data = GetData(row);
             FieldForm propertyForm = new FieldForm(data);
             if (propertyForm.ShowDialog() == DialogResult.OK)

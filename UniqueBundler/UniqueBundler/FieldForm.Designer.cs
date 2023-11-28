@@ -30,11 +30,11 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            Cancel = new Button();
-            OK = new Button();
             FieldName = new DataGridViewTextBoxColumn();
             FieldValue = new DataGridViewTextBoxColumn();
             IsUse = new DataGridViewCheckBoxColumn();
+            Cancel = new Button();
+            OK = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -52,28 +52,7 @@
             dataGridView1.RowTemplate.Height = 41;
             dataGridView1.Size = new Size(883, 492);
             dataGridView1.TabIndex = 0;
-            // 
-            // Cancel
-            // 
-            Cancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Cancel.Location = new Point(745, 510);
-            Cancel.Name = "Cancel";
-            Cancel.Size = new Size(150, 46);
-            Cancel.TabIndex = 1;
-            Cancel.Text = "Cancel";
-            Cancel.UseVisualStyleBackColor = true;
-            Cancel.Click += Cancel_Click;
-            // 
-            // OK
-            // 
-            OK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            OK.Location = new Point(589, 510);
-            OK.Name = "OK";
-            OK.Size = new Size(150, 46);
-            OK.TabIndex = 2;
-            OK.Text = "OK";
-            OK.UseVisualStyleBackColor = true;
-            OK.Click += OK_Click;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // FieldName
             // 
@@ -101,6 +80,28 @@
             IsUse.MinimumWidth = 10;
             IsUse.Name = "IsUse";
             IsUse.Width = 75;
+            // 
+            // Cancel
+            // 
+            Cancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            Cancel.Location = new Point(745, 510);
+            Cancel.Name = "Cancel";
+            Cancel.Size = new Size(150, 46);
+            Cancel.TabIndex = 1;
+            Cancel.Text = "Cancel";
+            Cancel.UseVisualStyleBackColor = true;
+            Cancel.Click += Cancel_Click;
+            // 
+            // OK
+            // 
+            OK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            OK.Location = new Point(589, 510);
+            OK.Name = "OK";
+            OK.Size = new Size(150, 46);
+            OK.TabIndex = 2;
+            OK.Text = "OK";
+            OK.UseVisualStyleBackColor = true;
+            OK.Click += OK_Click;
             // 
             // FieldForm
             // 

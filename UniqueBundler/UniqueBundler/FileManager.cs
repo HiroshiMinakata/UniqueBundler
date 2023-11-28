@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
 using static UniqueBundler.FileManager;
@@ -321,10 +322,10 @@ namespace UniqueBundler
                     str = str.Substring(1, str.Length - 2);
                     string[] elements = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
                     List<object> objects = new List<object>();
-                    foreach (var element in elements)
+                    for (int i = 0; i < elements.Length; i++)
                     {
-                        string trimmedElement = element.Trim();
-                        object elementObj = String2Object(trimmedElement, samples[0]);
+                        string trimmedElement = elements[i].Trim();
+                        object elementObj = String2Object(trimmedElement, samples[i]);
                         objects.Add(elementObj);
                     }
                     return objects;
@@ -373,7 +374,7 @@ namespace UniqueBundler
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 return openFileDialog.FileNames;
             else
-                return Array.Empty<string>();
+                return new string[1] {""};
         }
 
         /// <summary>

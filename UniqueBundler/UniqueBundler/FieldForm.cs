@@ -23,9 +23,20 @@ namespace UniqueBundler
         {
             foreach (FileManager.ClassFieldData assetData in assetDatas)
             {
+                dataGridView1.Rows.Add();
+                int row = dataGridView1.Rows.Count - 1;
+
+                // File
+                if (assetData.data.GetType() == typeof(byte[]))
+                {
+                    dataGridView1.Rows[row].Cells[1].Tag = assetData.data;
+                    DataGridViewButtonCell buttonCell = new DataGridViewButtonCell();
+                    dataGridView1.Rows[row].Cells[1] = buttonCell;
+                }
+
                 string value = "";
                 FileManager.Object2String(assetData.data, ref value);
-                dataGridView1.Rows.Add(assetData.name, value, assetData.isUse);
+                dataGridView1.Rows[row].SetValues(assetData.name, value, assetData.isUse);
             }
         }
 
@@ -36,6 +47,8 @@ namespace UniqueBundler
                 if (dataGridView1.Rows[row].Cells[1].Value == null) dataGridView1.Rows[row].Cells[1].Value = "";
                 string data = dataGridView1.Rows[row].Cells[1].Value.ToString();
                 assetDatas[row].data = FileManager.String2Object(data, assetDatas[row].data);
+                if (assetDatas[row].data.GetType() == typeof(byte[]))
+                    assetDatas[row].data = dataGridView1.Rows[row].Cells[1].Tag;
             }
             DialogResult = DialogResult.OK;
             Close();
@@ -44,6 +57,25 @@ namespace UniqueBundler
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        // File open button
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                var cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (cell is DataGridViewButtonCell)
+                {
+                    string fileName = FileManager.GetOpenFileNames(FileManager.AllFileFilter, false)[0];
+                    if (fileName == "") return;
+                    FileInfo fileInfo = new FileInfo(fileName);
+                    string size = FileManager.FormatFileSize(fileInfo.Length);
+                    byte[] fileNameBytes = Encoding.UTF8.GetBytes(fileName);
+                    cell.Value = size;
+                    cell.Tag = fileNameBytes;
+                }
+            }
         }
 
         FileManager.ClassFieldData[] assetDatas;
