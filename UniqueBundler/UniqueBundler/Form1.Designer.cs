@@ -35,6 +35,7 @@
             AssetClass = new DataGridViewComboBoxColumn();
             AssetSize = new DataGridViewTextBoxColumn();
             AssetField = new DataGridViewButtonColumn();
+            IsInclude = new DataGridViewCheckBoxColumn();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadBundleToolStripMenuItem = new ToolStripMenuItem();
@@ -53,7 +54,7 @@
             dataGridView1.AllowDrop = true;
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { AssetName, AssetExtension, AssetClass, AssetSize, AssetField });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { AssetName, AssetExtension, AssetClass, AssetSize, AssetField, IsInclude });
             dataGridView1.Location = new Point(20, 53);
             dataGridView1.Margin = new Padding(4, 2, 4, 2);
             dataGridView1.Name = "dataGridView1";
@@ -64,7 +65,6 @@
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
             dataGridView1.UserAddedRow += dataGridView1_UserAddedRow;
-            dataGridView1.UserDeletingRow += dataGridView1_UserDeletingRow;
             dataGridView1.DragDrop += dataGridView1_DragDrop;
             dataGridView1.DragEnter += dataGridView1_DragEnter;
             // 
@@ -73,7 +73,6 @@
             AssetName.HeaderText = "Name";
             AssetName.MinimumWidth = 10;
             AssetName.Name = "AssetName";
-            AssetName.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetName.Width = 200;
             // 
             // AssetExtension
@@ -82,7 +81,6 @@
             AssetExtension.MinimumWidth = 10;
             AssetExtension.Name = "AssetExtension";
             AssetExtension.ReadOnly = true;
-            AssetExtension.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetExtension.Width = 200;
             // 
             // AssetClass
@@ -90,6 +88,7 @@
             AssetClass.HeaderText = "Class";
             AssetClass.MinimumWidth = 10;
             AssetClass.Name = "AssetClass";
+            AssetClass.SortMode = DataGridViewColumnSortMode.Automatic;
             AssetClass.Width = 200;
             // 
             // AssetSize
@@ -98,7 +97,6 @@
             AssetSize.MinimumWidth = 10;
             AssetSize.Name = "AssetSize";
             AssetSize.ReadOnly = true;
-            AssetSize.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetSize.Width = 200;
             // 
             // AssetField
@@ -110,6 +108,15 @@
             AssetField.HeaderText = "Field";
             AssetField.MinimumWidth = 10;
             AssetField.Name = "AssetField";
+            // 
+            // IsInclude
+            // 
+            IsInclude.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            IsInclude.HeaderText = "Include";
+            IsInclude.MinimumWidth = 10;
+            IsInclude.Name = "IsInclude";
+            IsInclude.SortMode = DataGridViewColumnSortMode.Automatic;
+            IsInclude.Width = 137;
             // 
             // menuStrip1
             // 
@@ -210,5 +217,6 @@
         private DataGridViewComboBoxColumn AssetClass;
         private DataGridViewTextBoxColumn AssetSize;
         private DataGridViewButtonColumn AssetField;
+        private DataGridViewCheckBoxColumn IsInclude;
     }
 }

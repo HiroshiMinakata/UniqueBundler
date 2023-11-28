@@ -392,7 +392,8 @@ namespace UniqueBundler
                 fieldData[0].data = Encoding.UTF8.GetBytes(fileName);
                 string size = FormatFileSize(GetSize(fieldData));
                 string field = GetFieldString(fieldData);
-                return new string[] { assetName, extension, className, size, field };
+                string isInclude = "true";
+                return new string[] { assetName, extension, className, size, field , isInclude };
             }
             catch (Exception ex)
             {

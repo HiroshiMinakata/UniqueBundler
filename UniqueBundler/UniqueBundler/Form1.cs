@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using static UniqueBundler.FileManager;
 
 namespace UniqueBundler
@@ -11,10 +12,11 @@ namespace UniqueBundler
         }
 
         private FileManager file;
-        private const int classIndex = 2;
-        private const int sizeIndex = 3;
-        private const int fieldIndex = 4;
-        List<ClassFieldData[]> assetsDatas = new List<ClassFieldData[]>();
+        private const int ClassIndex = 2;
+        private const int SizeIndex = 3;
+        private const int FieldIndex = 4;
+        private const int IsIncludeIndex = 5;
+        //List<ClassFieldData[]> assetsDatas = new List<ClassFieldData[]>();
 
         public Form1()
         {
@@ -51,13 +53,7 @@ namespace UniqueBundler
         // Click cell
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == fieldIndex) OpenFieldForm(e.RowIndex);
-        }
-
-        // Delete
-        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            assetsDatas.RemoveAt(e.Row.Index);
+            if (e.ColumnIndex == FieldIndex) OpenFieldForm(e.RowIndex);
         }
 
         // Open class config
@@ -87,9 +83,9 @@ namespace UniqueBundler
 
             if (row < 0) return;
             // Change class
-            if (col == classIndex)
+            if (col == ClassIndex)
             {
-                string newClassName = dataGridView1.Rows[row].Cells[classIndex].Value.ToString();
+                string newClassName = dataGridView1.Rows[row].Cells[ClassIndex].Value.ToString();
                 ChangeValue(row, newClassName);
             }
 
@@ -135,16 +131,18 @@ namespace UniqueBundler
 
         private void SetValues(string className, int targetRow = -1)
         {
+            ClassFieldData[] data = file.GetDefaultFieldDatas(className).ToArray();
             if (targetRow == -1)
-                assetsDatas.Add(file.GetDefaultFieldDatas(className).ToArray());
+                dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[IsIncludeIndex].Tag = data;
             else
-                assetsDatas[targetRow] = file.GetDefaultFieldDatas(className).ToArray();
+                dataGridView1.Rows[targetRow].Cells[IsIncludeIndex].Tag = data;
         }
 
         private void OpenFieldForm(int row)
         {
-            if (assetsDatas.Count <= row) return;
-            FieldForm propertyForm = new FieldForm(assetsDatas[row]);
+            if (dataGridView1.Rows.Count <= row) return;
+            var data = GetData(row);
+            FieldForm propertyForm = new FieldForm(data);
             if (propertyForm.ShowDialog() == DialogResult.OK)
                 ReloadSize(row);
         }
@@ -167,7 +165,7 @@ namespace UniqueBundler
             size += sizeof(long);
 
             // Field
-            size += GetSize(assetsDatas[row]);
+            size += GetSize(GetData(row));
 
             // Footer
             // Extension
@@ -178,7 +176,7 @@ namespace UniqueBundler
             size += className.Length;
 
             // Set size
-            dataGridView1.Rows[row].Cells[sizeIndex].Value = FormatFileSize(size);
+            dataGridView1.Rows[row].Cells[SizeIndex].Value = FormatFileSize(size);
 
             return size;
         }
@@ -200,17 +198,24 @@ namespace UniqueBundler
         private void ChangeValue(int row, string newClassName)
         {
             ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
-            assetsDatas[row] = newData;
+            dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
         }
 
         private void InitializeData(int row)
         {
-            string[] datas = { "", "", file.GetClassNames()[0], "", "" };
+            string[] datas = { "", "", file.GetClassNames()[0], "", "", "false" };
             string className = datas[2];
-            assetsDatas.Add(file.GetDefaultFieldDatas(className).ToArray());
+            ClassFieldData[] data = file.GetDefaultFieldDatas(className).ToArray();
+            dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[IsIncludeIndex].Tag = data;
             SetLine(datas, row);
             SetValues(className, row);
             ReloadSize(row);
+        }
+
+        private ClassFieldData[] GetData(int row)
+        {
+            ClassFieldData[] data = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
+            return data;
         }
     }
 }
