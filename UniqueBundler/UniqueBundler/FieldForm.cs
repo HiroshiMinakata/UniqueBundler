@@ -36,7 +36,6 @@ namespace UniqueBundler
                 string data = dataGridView1.Rows[row].Cells[1].Value.ToString();
                 assetDatas[row].data = FileManager.String2Object(data, assetDatas[row].data);
             }
-            int b = 0;
             Close();
         }
 

@@ -43,6 +43,7 @@
             saveBundleToolStripMenuItem = new ToolStripMenuItem();
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
+            openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -60,12 +61,17 @@
             dataGridView1.Size = new Size(2201, 979);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.UserAddedRow += dataGridView1_UserAddedRow;
+            dataGridView1.UserDeletingRow += dataGridView1_UserDeletingRow;
+            dataGridView1.DragDrop += dataGridView1_DragDrop;
+            dataGridView1.DragEnter += dataGridView1_DragEnter;
             // 
             // AssetName
             // 
             AssetName.HeaderText = "Name";
             AssetName.MinimumWidth = 10;
             AssetName.Name = "AssetName";
+            AssetName.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetName.Width = 200;
             // 
             // AssetExtension
@@ -74,6 +80,7 @@
             AssetExtension.MinimumWidth = 10;
             AssetExtension.Name = "AssetExtension";
             AssetExtension.ReadOnly = true;
+            AssetExtension.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetExtension.Width = 200;
             // 
             // AssetClass
@@ -89,6 +96,7 @@
             AssetSize.MinimumWidth = 10;
             AssetSize.Name = "AssetSize";
             AssetSize.ReadOnly = true;
+            AssetSize.SortMode = DataGridViewColumnSortMode.NotSortable;
             AssetSize.Width = 200;
             // 
             // AssetField
@@ -121,13 +129,13 @@
             // loadBundleToolStripMenuItem
             // 
             loadBundleToolStripMenuItem.Name = "loadBundleToolStripMenuItem";
-            loadBundleToolStripMenuItem.Size = new Size(359, 44);
+            loadBundleToolStripMenuItem.Size = new Size(280, 44);
             loadBundleToolStripMenuItem.Text = "Load Bundle";
             // 
             // addFileToolStripMenuItem
             // 
             addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(359, 44);
+            addFileToolStripMenuItem.Size = new Size(280, 44);
             addFileToolStripMenuItem.Text = "Add File";
             addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
             // 
@@ -146,7 +154,7 @@
             // 
             // optionToolStripMenuItem
             // 
-            optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem });
+            optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
             optionToolStripMenuItem.Name = "optionToolStripMenuItem";
             optionToolStripMenuItem.Size = new Size(108, 36);
             optionToolStripMenuItem.Text = "Option";
@@ -154,8 +162,16 @@
             // openClassConfigToolStripMenuItem
             // 
             openClassConfigToolStripMenuItem.Name = "openClassConfigToolStripMenuItem";
-            openClassConfigToolStripMenuItem.Size = new Size(339, 44);
+            openClassConfigToolStripMenuItem.Size = new Size(388, 44);
             openClassConfigToolStripMenuItem.Text = "Open Class config";
+            openClassConfigToolStripMenuItem.Click += openClassConfigToolStripMenuItem_Click;
+            // 
+            // openExtensionConfigToolStripMenuItem
+            // 
+            openExtensionConfigToolStripMenuItem.Name = "openExtensionConfigToolStripMenuItem";
+            openExtensionConfigToolStripMenuItem.Size = new Size(388, 44);
+            openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
+            openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -186,6 +202,7 @@
         private ToolStripMenuItem addFileToolStripMenuItem;
         private ToolStripMenuItem saveBundleToolStripMenuItem;
         private ToolStripMenuItem openClassConfigToolStripMenuItem;
+        private ToolStripMenuItem openExtensionConfigToolStripMenuItem;
         private DataGridViewTextBoxColumn AssetName;
         private DataGridViewTextBoxColumn AssetExtension;
         private DataGridViewComboBoxColumn AssetClass;

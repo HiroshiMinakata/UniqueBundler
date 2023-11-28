@@ -78,6 +78,7 @@
             FieldName.MinimumWidth = 10;
             FieldName.Name = "FieldName";
             FieldName.ReadOnly = true;
+            FieldName.SortMode = DataGridViewColumnSortMode.NotSortable;
             FieldName.Width = 200;
             // 
             // FieldValue
@@ -86,6 +87,7 @@
             FieldValue.HeaderText = "Value";
             FieldValue.MinimumWidth = 10;
             FieldValue.Name = "FieldValue";
+            FieldValue.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // IsUse
             // 

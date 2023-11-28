@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
 using System.Text;
 using YamlDotNet.Core.Tokens;
@@ -138,10 +139,16 @@ namespace UniqueBundler
                 return null;
         }
 
-        private void CreateClassConfig()
+        private static void CreateClassConfig()
         {
             string text = "None:\r\n  Data:\r\n    - !!binary\r\n    - true";
             File.WriteAllText(ClassConfigPath, text);
+        }
+
+        public static void OpenConfigFile()
+        {
+            if (!File.Exists(ClassConfigPath)) CreateClassConfig();
+            Process.Start("notepad.exe", ClassConfigPath);
         }
 
         private string[] classNames;
@@ -155,10 +162,16 @@ namespace UniqueBundler
             if (!File.Exists(ClassExtrensionsPath)) CreateClassesExtensions();
             GetClassesExtensions();
         }
-        private void CreateClassesExtensions()
+        private static void CreateClassesExtensions()
         {
             string text = "None: [\"\"]";
             File.WriteAllText(ClassExtrensionsPath, text);
+        }
+
+        public static void OpenExtensionsFile()
+        {
+            if (!File.Exists(ClassExtrensionsPath)) CreateClassesExtensions();
+            Process.Start("notepad.exe", ClassExtrensionsPath);
         }
 
         private string[][] GetClassesExtensions()
@@ -205,7 +218,7 @@ namespace UniqueBundler
         #endregion
 
         #region Data
-        private long GetSize(ClassFieldData[] classFieldDatas)
+        public static long GetSize(ClassFieldData[] classFieldDatas)
         {
             long size = 0;
             foreach (ClassFieldData classFieldData in classFieldDatas)
@@ -218,7 +231,7 @@ namespace UniqueBundler
             return size;
         }
 
-        private void GetObjectSize(object obj, ref long size)
+        private static void GetObjectSize(object obj, ref long size)
         {
             if (obj is int intValue)
                 size += sizeof(int);
@@ -329,15 +342,23 @@ namespace UniqueBundler
 
         public string[] GetLineValue(string fileName)
         {
-            FileInfo fi = new FileInfo(fileName);
-            string assetName = Path.GetFileNameWithoutExtension(fi.Name);
-            string extension = fi.Extension.Substring(1);
-            string className = GetClassName(extension);
-            ClassFieldData[] fieldData = GetDefaultFieldDatas(className);
-            fieldData[0].data = Encoding.UTF8.GetBytes(fileName);
-            string size = FormatFileSize(GetSize(fieldData));
-            string field = GetFieldString(fieldData);
-            return new string[] { assetName, extension, className, size, field };
+            try
+            {
+                FileInfo fi = new FileInfo(fileName);
+                string assetName = Path.GetFileNameWithoutExtension(fi.Name);
+                string extension = fi.Extension.Substring(1);
+                string className = GetClassName(extension);
+                ClassFieldData[] fieldData = GetDefaultFieldDatas(className);
+                fieldData[0].data = Encoding.UTF8.GetBytes(fileName);
+                string size = FormatFileSize(GetSize(fieldData));
+                string field = GetFieldString(fieldData);
+                return new string[] { assetName, extension, className, size, field };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file.\nError: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
         }
 
         /// <summary>
@@ -360,7 +381,7 @@ namespace UniqueBundler
         public readonly string AllFileFilter = "All files (*.*)|*.*";
         public readonly string ABFileFilter = "AssetBundle (*.ab*)|*.ab*";
 
-        private static string FormatFileSize(long bytes)
+        public static string FormatFileSize(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
             double len = bytes;
