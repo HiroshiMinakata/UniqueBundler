@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows.Forms;
 using static UniqueBundler.FileManager;
 
@@ -91,6 +92,23 @@ namespace UniqueBundler
 
             long totalSize = GetToalSize();
             AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
+        }
+
+        // Sort
+        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == SizeIndex)
+            {
+                ListSortDirection direction = dataGridView1.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Descending ||
+                                              dataGridView1.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.None
+                                              ? ListSortDirection.Ascending
+                                              : ListSortDirection.Descending;
+
+                dataGridView1.Sort(new FileSizeComparer(direction));
+
+                dataGridView1.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection =
+                    direction == ListSortDirection.Ascending ? SortOrder.Ascending : SortOrder.Descending;
+            }
         }
         #endregion
 
@@ -197,6 +215,7 @@ namespace UniqueBundler
 
         private void ChangeValue(int row, string newClassName)
         {
+            if(row <= 0) return;
             ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
         }

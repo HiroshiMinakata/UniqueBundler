@@ -30,12 +30,6 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            AssetName = new DataGridViewTextBoxColumn();
-            AssetExtension = new DataGridViewTextBoxColumn();
-            AssetClass = new DataGridViewComboBoxColumn();
-            AssetSize = new DataGridViewTextBoxColumn();
-            AssetField = new DataGridViewButtonColumn();
-            IsInclude = new DataGridViewCheckBoxColumn();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadBundleToolStripMenuItem = new ToolStripMenuItem();
@@ -45,6 +39,12 @@
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
             openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
+            AssetName = new DataGridViewTextBoxColumn();
+            AssetExtension = new DataGridViewTextBoxColumn();
+            AssetClass = new DataGridViewComboBoxColumn();
+            AssetSize = new DataGridViewTextBoxColumn();
+            AssetField = new DataGridViewButtonColumn();
+            IsInclude = new DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -64,59 +64,10 @@
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
+            dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
             dataGridView1.UserAddedRow += dataGridView1_UserAddedRow;
             dataGridView1.DragDrop += dataGridView1_DragDrop;
             dataGridView1.DragEnter += dataGridView1_DragEnter;
-            // 
-            // AssetName
-            // 
-            AssetName.HeaderText = "Name";
-            AssetName.MinimumWidth = 10;
-            AssetName.Name = "AssetName";
-            AssetName.Width = 200;
-            // 
-            // AssetExtension
-            // 
-            AssetExtension.HeaderText = "Extension";
-            AssetExtension.MinimumWidth = 10;
-            AssetExtension.Name = "AssetExtension";
-            AssetExtension.ReadOnly = true;
-            AssetExtension.Width = 200;
-            // 
-            // AssetClass
-            // 
-            AssetClass.HeaderText = "Class";
-            AssetClass.MinimumWidth = 10;
-            AssetClass.Name = "AssetClass";
-            AssetClass.SortMode = DataGridViewColumnSortMode.Automatic;
-            AssetClass.Width = 200;
-            // 
-            // AssetSize
-            // 
-            AssetSize.HeaderText = "Size";
-            AssetSize.MinimumWidth = 10;
-            AssetSize.Name = "AssetSize";
-            AssetSize.ReadOnly = true;
-            AssetSize.Width = 200;
-            // 
-            // AssetField
-            // 
-            AssetField.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            AssetField.DefaultCellStyle = dataGridViewCellStyle1;
-            AssetField.HeaderText = "Field";
-            AssetField.MinimumWidth = 10;
-            AssetField.Name = "AssetField";
-            // 
-            // IsInclude
-            // 
-            IsInclude.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            IsInclude.HeaderText = "Include";
-            IsInclude.MinimumWidth = 10;
-            IsInclude.Name = "IsInclude";
-            IsInclude.SortMode = DataGridViewColumnSortMode.Automatic;
-            IsInclude.Width = 137;
             // 
             // menuStrip1
             // 
@@ -181,6 +132,57 @@
             openExtensionConfigToolStripMenuItem.Size = new Size(388, 44);
             openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
             openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
+            // 
+            // AssetName
+            // 
+            AssetName.HeaderText = "Name";
+            AssetName.MinimumWidth = 10;
+            AssetName.Name = "AssetName";
+            AssetName.Width = 200;
+            // 
+            // AssetExtension
+            // 
+            AssetExtension.HeaderText = "Extension";
+            AssetExtension.MinimumWidth = 10;
+            AssetExtension.Name = "AssetExtension";
+            AssetExtension.ReadOnly = true;
+            AssetExtension.Width = 200;
+            // 
+            // AssetClass
+            // 
+            AssetClass.HeaderText = "Class";
+            AssetClass.MinimumWidth = 10;
+            AssetClass.Name = "AssetClass";
+            AssetClass.SortMode = DataGridViewColumnSortMode.Automatic;
+            AssetClass.Width = 200;
+            // 
+            // AssetSize
+            // 
+            AssetSize.HeaderText = "Size";
+            AssetSize.MinimumWidth = 10;
+            AssetSize.Name = "AssetSize";
+            AssetSize.ReadOnly = true;
+            AssetSize.SortMode = DataGridViewColumnSortMode.Programmatic;
+            AssetSize.Width = 200;
+            // 
+            // AssetField
+            // 
+            AssetField.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            AssetField.DefaultCellStyle = dataGridViewCellStyle1;
+            AssetField.HeaderText = "Field";
+            AssetField.MinimumWidth = 10;
+            AssetField.Name = "AssetField";
+            // 
+            // IsInclude
+            // 
+            IsInclude.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            IsInclude.HeaderText = "Include";
+            IsInclude.MinimumWidth = 10;
+            IsInclude.Name = "IsInclude";
+            IsInclude.SortMode = DataGridViewColumnSortMode.Automatic;
+            IsInclude.Width = 137;
             // 
             // Form1
             // 
