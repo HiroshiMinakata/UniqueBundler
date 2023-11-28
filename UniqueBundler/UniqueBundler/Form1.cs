@@ -28,7 +28,7 @@ namespace UniqueBundler
         // Add file
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] fileNames = file.GetNames(file.AllFileFilter, false);
+            string[] fileNames = file.GetNames(file.AllFileFilter, true);
             AddDatas(fileNames);
         }
 
