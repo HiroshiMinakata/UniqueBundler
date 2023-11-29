@@ -32,21 +32,23 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            menuStrip1 = new MenuStrip();
-            fileToolStripMenuItem = new ToolStripMenuItem();
-            loadBundleToolStripMenuItem = new ToolStripMenuItem();
-            addFileToolStripMenuItem = new ToolStripMenuItem();
-            saveToolStripMenuItem = new ToolStripMenuItem();
-            saveBundleToolStripMenuItem = new ToolStripMenuItem();
-            optionToolStripMenuItem = new ToolStripMenuItem();
-            openClassConfigToolStripMenuItem = new ToolStripMenuItem();
-            openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
             AssetName = new DataGridViewTextBoxColumn();
             AssetExtension = new DataGridViewTextBoxColumn();
             AssetClass = new DataGridViewComboBoxColumn();
             AssetSize = new DataGridViewTextBoxColumn();
             AssetField = new DataGridViewButtonColumn();
             IsInclude = new DataGridViewCheckBoxColumn();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            loadBundleToolStripMenuItem = new ToolStripMenuItem();
+            loadCompressedBundleToolStripMenuItem = new ToolStripMenuItem();
+            addFileToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            saveBundleToolStripMenuItem = new ToolStripMenuItem();
+            saveCompressedBundleToolStripMenuItem = new ToolStripMenuItem();
+            optionToolStripMenuItem = new ToolStripMenuItem();
+            openClassConfigToolStripMenuItem = new ToolStripMenuItem();
+            openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -73,72 +75,6 @@
             dataGridView1.UserDeletedRow += dataGridView1_UserDeletedRow;
             dataGridView1.DragDrop += dataGridView1_DragDrop;
             dataGridView1.DragEnter += dataGridView1_DragEnter;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(32, 32);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(2242, 40);
-            menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadBundleToolStripMenuItem, addFileToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(71, 36);
-            fileToolStripMenuItem.Text = "File";
-            // 
-            // loadBundleToolStripMenuItem
-            // 
-            loadBundleToolStripMenuItem.Name = "loadBundleToolStripMenuItem";
-            loadBundleToolStripMenuItem.Size = new Size(280, 44);
-            loadBundleToolStripMenuItem.Text = "Load Bundle";
-            loadBundleToolStripMenuItem.Click += loadBundleToolStripMenuItem_Click;
-            // 
-            // addFileToolStripMenuItem
-            // 
-            addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(280, 44);
-            addFileToolStripMenuItem.Text = "Add File";
-            addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
-            // 
-            // saveToolStripMenuItem
-            // 
-            saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem });
-            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(84, 36);
-            saveToolStripMenuItem.Text = "Save";
-            // 
-            // saveBundleToolStripMenuItem
-            // 
-            saveBundleToolStripMenuItem.Name = "saveBundleToolStripMenuItem";
-            saveBundleToolStripMenuItem.Size = new Size(279, 44);
-            saveBundleToolStripMenuItem.Text = "Save Bundle";
-            saveBundleToolStripMenuItem.Click += saveBundleToolStripMenuItem_Click;
-            // 
-            // optionToolStripMenuItem
-            // 
-            optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
-            optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            optionToolStripMenuItem.Size = new Size(108, 36);
-            optionToolStripMenuItem.Text = "Option";
-            // 
-            // openClassConfigToolStripMenuItem
-            // 
-            openClassConfigToolStripMenuItem.Name = "openClassConfigToolStripMenuItem";
-            openClassConfigToolStripMenuItem.Size = new Size(388, 44);
-            openClassConfigToolStripMenuItem.Text = "Open Class config";
-            openClassConfigToolStripMenuItem.Click += openClassConfigToolStripMenuItem_Click;
-            // 
-            // openExtensionConfigToolStripMenuItem
-            // 
-            openExtensionConfigToolStripMenuItem.Name = "openExtensionConfigToolStripMenuItem";
-            openExtensionConfigToolStripMenuItem.Size = new Size(388, 44);
-            openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
-            openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
             // 
             // AssetName
             // 
@@ -195,6 +131,86 @@
             IsInclude.SortMode = DataGridViewColumnSortMode.Automatic;
             IsInclude.Width = 137;
             // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(32, 32);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(2242, 42);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadBundleToolStripMenuItem, loadCompressedBundleToolStripMenuItem, addFileToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(71, 38);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // loadBundleToolStripMenuItem
+            // 
+            loadBundleToolStripMenuItem.Name = "loadBundleToolStripMenuItem";
+            loadBundleToolStripMenuItem.Size = new Size(419, 44);
+            loadBundleToolStripMenuItem.Text = "Load Bundle";
+            loadBundleToolStripMenuItem.Click += loadBundleToolStripMenuItem_Click;
+            // 
+            // loadCompressedBundleToolStripMenuItem
+            // 
+            loadCompressedBundleToolStripMenuItem.Name = "loadCompressedBundleToolStripMenuItem";
+            loadCompressedBundleToolStripMenuItem.Size = new Size(419, 44);
+            loadCompressedBundleToolStripMenuItem.Text = "Load Compressed Bundle";
+            loadCompressedBundleToolStripMenuItem.Click += loadCompressedBundleToolStripMenuItem_Click;
+            // 
+            // addFileToolStripMenuItem
+            // 
+            addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
+            addFileToolStripMenuItem.Size = new Size(419, 44);
+            addFileToolStripMenuItem.Text = "Add File";
+            addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
+            // 
+            // saveToolStripMenuItem
+            // 
+            saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem, saveCompressedBundleToolStripMenuItem });
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.Size = new Size(84, 38);
+            saveToolStripMenuItem.Text = "Save";
+            // 
+            // saveBundleToolStripMenuItem
+            // 
+            saveBundleToolStripMenuItem.Name = "saveBundleToolStripMenuItem";
+            saveBundleToolStripMenuItem.Size = new Size(418, 44);
+            saveBundleToolStripMenuItem.Text = "Save Bundle";
+            saveBundleToolStripMenuItem.Click += saveBundleToolStripMenuItem_Click;
+            // 
+            // saveCompressedBundleToolStripMenuItem
+            // 
+            saveCompressedBundleToolStripMenuItem.Name = "saveCompressedBundleToolStripMenuItem";
+            saveCompressedBundleToolStripMenuItem.Size = new Size(418, 44);
+            saveCompressedBundleToolStripMenuItem.Text = "Save Compressed Bundle";
+            saveCompressedBundleToolStripMenuItem.Click += saveCompressedBundleToolStripMenuItem_Click;
+            // 
+            // optionToolStripMenuItem
+            // 
+            optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
+            optionToolStripMenuItem.Name = "optionToolStripMenuItem";
+            optionToolStripMenuItem.Size = new Size(108, 38);
+            optionToolStripMenuItem.Text = "Option";
+            // 
+            // openClassConfigToolStripMenuItem
+            // 
+            openClassConfigToolStripMenuItem.Name = "openClassConfigToolStripMenuItem";
+            openClassConfigToolStripMenuItem.Size = new Size(388, 44);
+            openClassConfigToolStripMenuItem.Text = "Open Class config";
+            openClassConfigToolStripMenuItem.Click += openClassConfigToolStripMenuItem_Click;
+            // 
+            // openExtensionConfigToolStripMenuItem
+            // 
+            openExtensionConfigToolStripMenuItem.Name = "openExtensionConfigToolStripMenuItem";
+            openExtensionConfigToolStripMenuItem.Size = new Size(388, 44);
+            openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
+            openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -231,5 +247,7 @@
         private DataGridViewTextBoxColumn AssetSize;
         private DataGridViewButtonColumn AssetField;
         private DataGridViewCheckBoxColumn IsInclude;
+        private ToolStripMenuItem saveCompressedBundleToolStripMenuItem;
+        private ToolStripMenuItem loadCompressedBundleToolStripMenuItem;
     }
 }

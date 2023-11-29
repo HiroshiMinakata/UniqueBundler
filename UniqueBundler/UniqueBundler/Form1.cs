@@ -30,12 +30,24 @@ namespace UniqueBundler
 
         #region Event
         #region Load from file
+        
+        // Normal
         private void loadBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
             LoadBundle loadBundle = new LoadBundle(loadFileName);
             loadBundle.NormalRead();
+            SetLoadData(loadBundle);
+        }
+
+        // Compressed
+        private void loadCompressedBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
+            if (loadFileName == "") return;
+            LoadBundle loadBundle = new LoadBundle(loadFileName);
+            loadBundle.CompressedRead();
             SetLoadData(loadBundle);
         }
 
@@ -72,6 +84,8 @@ namespace UniqueBundler
         #endregion
 
         #region Save file
+
+        // Normal
         private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int assetNum = GetAssetNum();
@@ -83,6 +97,20 @@ namespace UniqueBundler
             WriteBundle writeBundle = Save();
             if (writeBundle == null) return;
             writeBundle.NormalWrite();
+        }
+
+        // Compressed
+        private void saveCompressedBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int assetNum = GetAssetNum();
+            if (assetNum == 0)
+            {
+                MessageBox.Show("Please select one or more.", "Save bundle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            WriteBundle writeBundle = Save();
+            if (writeBundle == null) return;
+            writeBundle.CompressWrite();
         }
 
         private WriteBundle Save()

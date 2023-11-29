@@ -36,6 +36,7 @@
 * }
 */
 
+using System.IO.Compression;
 using System.Text;
 
 namespace UniqueBundler
@@ -76,6 +77,16 @@ namespace UniqueBundler
         public void NormalRead()
         {
             Read();
+        }
+
+        public void CompressedRead()
+        {
+            string tempFileName = Path.GetTempFileName();
+            DecompressFile(loadFileName, tempFileName);
+            loadFileName = tempFileName;
+            Read();
+            if (File.Exists(tempFileName))
+                File.Delete(tempFileName);
         }
 
         private void Read()
@@ -221,5 +232,14 @@ namespace UniqueBundler
             return tempFilePath;
         }
         #endregion
+
+        public void DecompressFile(string inputFile, string outputFile)
+        {
+            using (FileStream compressedFileStream = File.OpenRead(inputFile))
+            using (FileStream outputFileStream = File.Create(outputFile))
+            using (GZipStream decompressionStream = new GZipStream(compressedFileStream, CompressionMode.Decompress))
+                decompressionStream.CopyTo(outputFileStream);
+        }
+
     }
 }

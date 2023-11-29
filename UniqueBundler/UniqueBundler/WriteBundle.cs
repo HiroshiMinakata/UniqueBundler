@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO.Compression;
+using System.Text;
 using static UniqueBundler.Form1;
 
 /*
@@ -74,6 +75,16 @@ namespace UniqueBundler
         public void NormalWrite()
         {
             Write();
+        }
+
+        public void CompressWrite()
+        {
+            string outputPath = saveFileName;
+            saveFileName = Path.GetTempFileName();
+            Write();
+            CompressFile(saveFileName, outputPath);
+            if (File.Exists(saveFileName))
+                File.Delete(saveFileName);
         }
 
         private void Write()
@@ -237,6 +248,14 @@ namespace UniqueBundler
             }
 
             return utf8ByteCount + lengthByteCount;
+        }
+
+        public void CompressFile(string inputFile, string outputFile)
+        {
+            using (FileStream originalFileStream = File.OpenRead(inputFile))
+            using (FileStream compressedFileStream = File.Create(outputFile))
+            using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
+                originalFileStream.CopyTo(compressionStream);
         }
     }
 }
