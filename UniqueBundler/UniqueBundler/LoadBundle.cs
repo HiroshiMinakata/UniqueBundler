@@ -37,6 +37,7 @@
 */
 
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace UniqueBundler
@@ -74,19 +75,57 @@ namespace UniqueBundler
             this.loadFileName = loadFileName;
         }
 
-        public void NormalRead()
+        public bool NormalRead()
         {
-            Read();
+            try
+            {
+                Read();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file.\nError: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
         }
 
-        public void CompressedRead()
+        public bool CompressedRead()
         {
-            string tempFileName = Path.GetTempFileName();
-            DecompressFile(loadFileName, tempFileName);
-            loadFileName = tempFileName;
-            Read();
-            if (File.Exists(tempFileName))
-                File.Delete(tempFileName);
+            try
+            {
+                string tempFileName = Path.GetTempFileName();
+                DecompressFile(loadFileName, tempFileName);
+                loadFileName = tempFileName;
+                Read();
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file.\nError: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        public bool AESRead(byte[] key, byte[] iv)
+        {
+            try
+            {
+                string tempFileName = Path.GetTempFileName();
+                AESFile(loadFileName, tempFileName, key, iv);
+                loadFileName = tempFileName;
+                Read();
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file.\nError: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
         }
 
         private void Read()
@@ -239,6 +278,22 @@ namespace UniqueBundler
             using (FileStream outputFileStream = File.Create(outputFile))
             using (GZipStream decompressionStream = new GZipStream(compressedFileStream, CompressionMode.Decompress))
                 decompressionStream.CopyTo(outputFileStream);
+        }
+
+        public void AESFile(string inputFile, string outputFile, byte[] key, byte[] iv)
+        {
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = iv;
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                using (FileStream fileStream = new FileStream(inputFile, FileMode.Open))
+                using (CryptoStream cryptoStream = new CryptoStream(fileStream, decryptor, CryptoStreamMode.Read))
+                using (FileStream outputStream = new FileStream(outputFile, FileMode.Create))
+                    cryptoStream.CopyTo(outputStream);
+            }
         }
 
     }

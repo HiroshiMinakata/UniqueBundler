@@ -40,12 +40,14 @@
             IsInclude = new DataGridViewCheckBoxColumn();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            addFileToolStripMenuItem = new ToolStripMenuItem();
             loadBundleToolStripMenuItem = new ToolStripMenuItem();
             loadCompressedBundleToolStripMenuItem = new ToolStripMenuItem();
-            addFileToolStripMenuItem = new ToolStripMenuItem();
+            loadAESBundleToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveBundleToolStripMenuItem = new ToolStripMenuItem();
             saveCompressedBundleToolStripMenuItem = new ToolStripMenuItem();
+            saveAESBundleToolStripMenuItem = new ToolStripMenuItem();
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
             openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
@@ -143,10 +145,17 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadBundleToolStripMenuItem, loadCompressedBundleToolStripMenuItem, addFileToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addFileToolStripMenuItem, loadBundleToolStripMenuItem, loadCompressedBundleToolStripMenuItem, loadAESBundleToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(71, 38);
             fileToolStripMenuItem.Text = "File";
+            // 
+            // addFileToolStripMenuItem
+            // 
+            addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
+            addFileToolStripMenuItem.Size = new Size(419, 44);
+            addFileToolStripMenuItem.Text = "Add File";
+            addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
             // 
             // loadBundleToolStripMenuItem
             // 
@@ -162,16 +171,16 @@
             loadCompressedBundleToolStripMenuItem.Text = "Load Compressed Bundle";
             loadCompressedBundleToolStripMenuItem.Click += loadCompressedBundleToolStripMenuItem_Click;
             // 
-            // addFileToolStripMenuItem
+            // loadAESBundleToolStripMenuItem
             // 
-            addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(419, 44);
-            addFileToolStripMenuItem.Text = "Add File";
-            addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
+            loadAESBundleToolStripMenuItem.Name = "loadAESBundleToolStripMenuItem";
+            loadAESBundleToolStripMenuItem.Size = new Size(419, 44);
+            loadAESBundleToolStripMenuItem.Text = "Load AES Bundle";
+            loadAESBundleToolStripMenuItem.Click += loadAESBundleToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
-            saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem, saveCompressedBundleToolStripMenuItem });
+            saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem, saveCompressedBundleToolStripMenuItem, saveAESBundleToolStripMenuItem });
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.Size = new Size(84, 38);
             saveToolStripMenuItem.Text = "Save";
@@ -189,6 +198,13 @@
             saveCompressedBundleToolStripMenuItem.Size = new Size(418, 44);
             saveCompressedBundleToolStripMenuItem.Text = "Save Compressed Bundle";
             saveCompressedBundleToolStripMenuItem.Click += saveCompressedBundleToolStripMenuItem_Click;
+            // 
+            // saveAESBundleToolStripMenuItem
+            // 
+            saveAESBundleToolStripMenuItem.Name = "saveAESBundleToolStripMenuItem";
+            saveAESBundleToolStripMenuItem.Size = new Size(418, 44);
+            saveAESBundleToolStripMenuItem.Text = "Save AES Bundle";
+            saveAESBundleToolStripMenuItem.Click += saveAESBundleToolStripMenuItem_Click;
             // 
             // optionToolStripMenuItem
             // 
@@ -249,5 +265,7 @@
         private DataGridViewCheckBoxColumn IsInclude;
         private ToolStripMenuItem saveCompressedBundleToolStripMenuItem;
         private ToolStripMenuItem loadCompressedBundleToolStripMenuItem;
+        private ToolStripMenuItem loadAESBundleToolStripMenuItem;
+        private ToolStripMenuItem saveAESBundleToolStripMenuItem;
     }
 }

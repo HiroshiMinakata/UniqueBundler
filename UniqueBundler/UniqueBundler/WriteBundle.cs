@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 using static UniqueBundler.Form1;
 
@@ -83,6 +84,16 @@ namespace UniqueBundler
             saveFileName = Path.GetTempFileName();
             Write();
             CompressFile(saveFileName, outputPath);
+            if (File.Exists(saveFileName))
+                File.Delete(saveFileName);
+        }
+
+        public void AESWrite(byte[] key, byte[] iv)
+        {
+            string outputPath = saveFileName;
+            saveFileName = Path.GetTempFileName();
+            Write();
+            AESFile(saveFileName, outputPath, key, iv);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
         }
@@ -256,6 +267,22 @@ namespace UniqueBundler
             using (FileStream compressedFileStream = File.Create(outputFile))
             using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
                 originalFileStream.CopyTo(compressionStream);
+        }
+
+        public void AESFile(string inputFile, string outputFile, byte[] key, byte[] iv)
+        {
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = iv;
+
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                using (FileStream fileStream = new FileStream(outputFile, FileMode.Create))
+                using (CryptoStream cryptoStream = new CryptoStream(fileStream, encryptor, CryptoStreamMode.Write))
+                using (FileStream inputStream = new FileStream(inputFile, FileMode.Open))
+                    inputStream.CopyTo(cryptoStream);
+            }
         }
     }
 }

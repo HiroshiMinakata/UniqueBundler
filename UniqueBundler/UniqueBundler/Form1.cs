@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Text;
 using static UniqueBundler.FileManager;
+using static UniqueBundler.Form1;
 
 namespace UniqueBundler
 {
@@ -30,14 +31,15 @@ namespace UniqueBundler
 
         #region Event
         #region Load from file
-        
+
         // Normal
         private void loadBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
             LoadBundle loadBundle = new LoadBundle(loadFileName);
-            loadBundle.NormalRead();
+            bool loaded = loadBundle.NormalRead();
+            if (loaded == false) return;
             SetLoadData(loadBundle);
         }
 
@@ -47,7 +49,21 @@ namespace UniqueBundler
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
             LoadBundle loadBundle = new LoadBundle(loadFileName);
-            loadBundle.CompressedRead();
+            bool loaded = loadBundle.CompressedRead();
+            if (loaded == false) return;
+            SetLoadData(loadBundle);
+        }
+
+        // AES
+        private void loadAESBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
+            if (loadFileName == "") return;
+            LoadBundle loadBundle = new LoadBundle(loadFileName);
+            PasswordForm passForm = new PasswordForm();
+            if (passForm.ShowDialog() != DialogResult.OK) return;
+            bool loaded = loadBundle.AESRead(passForm.key, passForm.iv);
+            if (loaded == false) return;
             SetLoadData(loadBundle);
         }
 
@@ -113,6 +129,24 @@ namespace UniqueBundler
             writeBundle.CompressWrite();
         }
 
+        // AES
+        private void saveAESBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int assetNum = GetAssetNum();
+            if (assetNum == 0)
+            {
+                MessageBox.Show("Please select one or more.", "Save bundle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            WriteBundle writeBundle = Save();
+
+            if (writeBundle == null) return;
+
+            PasswordForm passForm = new PasswordForm();
+            if (passForm.ShowDialog() != DialogResult.OK) return;
+            writeBundle.AESWrite(passForm.key, passForm.iv);
+        }
+
         private WriteBundle Save()
         {
             string saveFileName = GetSaveFileName(".ab", ABFileFilter);
@@ -134,6 +168,7 @@ namespace UniqueBundler
         {
             string[] fileNames = GetOpenFileNames(AllFileFilter, true);
             AddDatas(fileNames);
+            GetToalSize();
         }
 
         // Drag file
@@ -150,6 +185,7 @@ namespace UniqueBundler
         {
             string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             AddDatas(fileNames);
+            GetToalSize();
         }
 
         // Click cell
