@@ -127,7 +127,7 @@ namespace UniqueBundler
             int size = 0;
             for (int i = 0; i < assetNum; i++)
             {
-                size += Encoding.UTF8.GetBytes(assetNames[i]).Length + 1;
+                size += GetUTF8Size(assetNames[i]);
                 size += sizeof(int);
                 size += sizeof(long);
                 size += sizeof(long);
@@ -212,11 +212,25 @@ namespace UniqueBundler
             int size = 0;
             for (int i = 0; i < assetNum; i++)
             {
-                size += Encoding.UTF8.GetBytes(formats[i]).Length + 1;
-                size += Encoding.UTF8.GetBytes(classNames[i]).Length + 1;
+                size += GetUTF8Size(formats[i]);
+                size += GetUTF8Size(classNames[i]);
             }
             return size;
         }
         #endregion
+
+        private static int GetUTF8Size(string str)
+        {
+            int utf8ByteCount = Encoding.UTF8.GetByteCount(str);
+            int lengthByteCount = 1;
+            int length = utf8ByteCount;
+            while (length > 0x7F)
+            {
+                lengthByteCount++;
+                length >>= 7;
+            }
+
+            return utf8ByteCount + lengthByteCount;
+        }
     }
 }
