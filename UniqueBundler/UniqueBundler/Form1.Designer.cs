@@ -70,6 +70,7 @@
             dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
             dataGridView1.RowsAdded += dataGridView1_RowsAdded;
             dataGridView1.UserAddedRow += dataGridView1_UserAddedRow;
+            dataGridView1.UserDeletedRow += dataGridView1_UserDeletedRow;
             dataGridView1.DragDrop += dataGridView1_DragDrop;
             dataGridView1.DragEnter += dataGridView1_DragEnter;
             // 

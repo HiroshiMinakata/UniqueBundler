@@ -90,8 +90,7 @@ namespace UniqueBundler
                 ChangeValue(row, newClassName);
             }
 
-            long totalSize = GetToalSize();
-            AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
+            GetToalSize();
         }
 
         // Sort
@@ -132,13 +131,26 @@ namespace UniqueBundler
 
             writeBundle.NormalWrite();
         }
+
+        // Added
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+
+        }
+
+        // Deleted
+        private void dataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            GetToalSize();
+        }
         #endregion
 
         private int GetAssetNum()
         {
             int assetNum = 0;
             for (int row = 0; row < dataGridView1.RowCount; row++)
-                if (dataGridView1.Rows[row].Cells[IsIncludeIndex].Value.ToString() == "True") assetNum++;
+                if (Convert.ToBoolean(dataGridView1.Rows[row].Cells[IsIncludeIndex].Value) == true)
+                    assetNum++;
             return assetNum;
         }
 
@@ -147,7 +159,7 @@ namespace UniqueBundler
             int num = 0;
             for (int row = 0; row < dataGridView1.RowCount; row++)
             {
-                if (dataGridView1.Rows[row].Cells[IsIncludeIndex].Value.ToString() == "False") continue;
+                if (Convert.ToBoolean(dataGridView1.Rows[row].Cells[IsIncludeIndex].Value) == false) continue;
                 assetsDatas[num] = GetData(row);
                 assetNames[num] = dataGridView1.Rows[row].Cells[AssetNameIndex].Value.ToString();
                 formats[num] = dataGridView1.Rows[row].Cells[FormatIndex].Value.ToString();
@@ -166,6 +178,7 @@ namespace UniqueBundler
                 SetLine(datas);
                 string className = datas[2];
                 SetValues(className);
+                ReloadSize(dataGridView1.Rows.Count - 2);
             }
         }
 
@@ -254,11 +267,12 @@ namespace UniqueBundler
 
             for (int row = 0; row < dataGridView1.RowCount; row++)
             {
-                string isInclude = dataGridView1.Rows[row].Cells[IsIncludeIndex].Value?.ToString() ?? "False";
-                if (isInclude == "False") continue;
+                bool isInclude = Convert.ToBoolean(dataGridView1.Rows[row].Cells[IsIncludeIndex].Value);
+                if (isInclude == false) continue;
                 totalSize += ReloadSize(row);
             }
 
+            AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
             return totalSize;
         }
 
@@ -303,11 +317,6 @@ namespace UniqueBundler
             {
                 dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
-        }
-
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-
         }
     }
 }
