@@ -54,12 +54,15 @@ namespace UniqueBundler
                 assetNames[i] = loadBundle.metaDatas[i].name;
                 formats[i] = loadBundle.footers[i].format;
                 classNames[i] = loadBundle.footers[i].className;
+                ClassFieldData[] defaultData = file.GetDefaultFieldDatas(classNames[i]);
+                for (int j = 0; j < defaultData.Length; j++)
+                    assetsDatas[i][j].name = defaultData[j].name;
                 fieldStrings[i] = GetFieldString(assetsDatas[i]);
             }
 
             for (int i = 0; i < assetNum; i++)
             {
-                dataGridView1.Rows.Add(assetNames[i], formats[i], classNames[i], "", "", true);
+                dataGridView1.Rows.Add(assetNames[i], formats[i], classNames[i], "", fieldStrings[i], true);
                 dataGridView1.Rows[i].Cells[IsIncludeIndex].Tag = assetsDatas[i];
                 ReloadSize(i);
             }
