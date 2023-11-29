@@ -33,7 +33,7 @@ namespace UniqueBundler
         #region Load from file
 
         // Normal
-        private void loadBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadNormalBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
@@ -44,7 +44,7 @@ namespace UniqueBundler
         }
 
         // Compressed
-        private void loadCompressedBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadGZIPBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
@@ -69,8 +69,8 @@ namespace UniqueBundler
 
         private void SetLoadData(LoadBundle loadBundle)
         {
+            if (loadBundle.assetNum < 0) return;
             dataGridView1.Rows.Clear();
-
             int assetNum = loadBundle.assetNum;
             ClassFieldData[][] assetsDatas = loadBundle.assetsFieldDatas;
             string[] assetNames = new string[assetNum];
