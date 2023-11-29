@@ -285,8 +285,38 @@ namespace UniqueBundler
                 ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
                 string fieldString = GetFieldString(fieldData);
                 dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
-                SetExtension(row);
+                string ext = SetExtension(row);
+                UpdateClassName(row, ext);
             }
+        }
+
+        private string SetExtension(int row)
+        {
+            ClassFieldData[] datas = GetData(row);
+            foreach (ClassFieldData data in datas)
+            {
+                if (data.data.GetType() != typeof(byte[])) return "";
+                string path = Encoding.UTF8.GetString((byte[])data.data);
+                string ext = Path.GetExtension(path);
+                if (ext == null || ext == "")
+                    return "";
+                ext = ext.Substring(1);
+                if (ext == "tmp")
+                    return "";
+                dataGridView1.Rows[row].Cells[ExtensionIndex].Value = ext;
+                return ext;
+            }
+            return "";
+        }
+
+        private void UpdateClassName(int row, string extension)
+        {
+            if (extension == "") return;
+            string className = dataGridView1.Rows[row].Cells[ClassIndex].Value.ToString();
+            if (className != file.GetClassNames()[0]) return;
+            string newClassName = file.GetClassName(extension);
+            if (className == newClassName) return;
+            ChangeValue(row, newClassName);
         }
 
         private long ReloadSize(int row = -1)
@@ -357,6 +387,8 @@ namespace UniqueBundler
             for (int i = 0; i < minLength; i++)
                 if (newData[i].name == oldData[i].name)
                     newData[i].data = oldData[i].data;
+                else if (oldData[i].name == "Data" && newData[i].name.Contains("Data"))
+                    newData[i].data = oldData[i].data;
 
             // Set data
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
@@ -364,6 +396,7 @@ namespace UniqueBundler
             ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
             string fieldString = GetFieldString(fieldData);
             dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
+            dataGridView1.Rows[row].Cells[ClassIndex].Value = newClassName;
         }
 
         private void InitializeData(int row)
@@ -383,24 +416,6 @@ namespace UniqueBundler
         {
             ClassFieldData[] data = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
             return data;
-        }
-
-        private void SetExtension(int row)
-        {
-            ClassFieldData[] datas = GetData(row);
-            foreach (ClassFieldData data in datas)
-            {
-                if (data.data.GetType() != typeof(byte[])) return;
-                string path = Encoding.UTF8.GetString((byte[])data.data);
-                string ext = Path.GetExtension(path);
-                if (ext == null)
-                    return;
-                ext = ext.Substring(1);
-                if (ext == "tmp")
-                    return;
-                dataGridView1.Rows[row].Cells[ExtensionIndex].Value = ext;
-                return;
-            }
         }
     }
 }
