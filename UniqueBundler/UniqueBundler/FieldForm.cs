@@ -4,11 +4,13 @@ namespace UniqueBundler
 {
     public partial class FieldForm : Form
     {
-        public FieldForm(FileManager.ClassFieldData[] assetDatas)
+        public FieldForm(FileManager.ClassFieldData[] assetDatas, string assetName)
         {
             this.assetDatas = assetDatas;
             InitializeComponent();
             InitializeDataGridView();
+            if(assetName != "")
+                this.Text += " : " + assetName;
         }
 
         private void InitializeDataGridView()

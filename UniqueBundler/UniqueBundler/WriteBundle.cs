@@ -1,7 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
-using static UniqueBundler.Form1;
 
 /*
 * .ab (AssetBundle file)

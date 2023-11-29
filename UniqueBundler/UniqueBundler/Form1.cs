@@ -437,7 +437,9 @@ namespace UniqueBundler
         {
             if (row >= dataGridView1.Rows.Count || row < 0) return;
             var data = GetData(row);
-            FieldForm propertyForm = new FieldForm(data);
+            string assetName = dataGridView1.Rows[row].Cells[AssetNameIndex].Value.ToString();
+            if (assetName == null) assetName = "";
+            FieldForm propertyForm = new FieldForm(data, assetName);
             if (propertyForm.ShowDialog() == DialogResult.OK)
             {
                 ReloadSize(row);
