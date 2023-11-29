@@ -297,6 +297,9 @@ namespace UniqueBundler
             // Set data
             dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag = newData;
             ReloadSize(row);
+            ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
+            string fieldString = GetFieldString(fieldData);
+            dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
         }
 
         private void InitializeData(int row)
@@ -308,6 +311,8 @@ namespace UniqueBundler
             SetLine(datas, row);
             SetValues(className, row);
             ReloadSize(row);
+            string fieldString = GetFieldString(data);
+            dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
         }
 
         private ClassFieldData[] GetData(int row)
