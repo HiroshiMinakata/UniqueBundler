@@ -320,7 +320,7 @@ namespace UniqueBundler
                     for (int i = 0; i < elements.Length; i++)
                     {
                         string trimmedElement = elements[i].Trim();
-                        object elementObj = String2Object(trimmedElement, samples[i]);
+                        object elementObj = String2Object(trimmedElement, samples[0]);
                         objects.Add(elementObj);
                     }
                     return objects;
