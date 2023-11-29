@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             AssetName = new DataGridViewTextBoxColumn();
             AssetExtension = new DataGridViewTextBoxColumn();
@@ -53,6 +53,7 @@
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
             openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
+            addFolderToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -89,8 +90,8 @@
             // 
             // AssetExtension
             // 
-            dataGridViewCellStyle1.BackColor = Color.LightGray;
-            AssetExtension.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = Color.LightGray;
+            AssetExtension.DefaultCellStyle = dataGridViewCellStyle4;
             AssetExtension.HeaderText = "Extension";
             AssetExtension.MinimumWidth = 10;
             AssetExtension.Name = "AssetExtension";
@@ -107,8 +108,8 @@
             // 
             // AssetSize
             // 
-            dataGridViewCellStyle2.BackColor = Color.LightGray;
-            AssetSize.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.BackColor = Color.LightGray;
+            AssetSize.DefaultCellStyle = dataGridViewCellStyle5;
             AssetSize.HeaderText = "Size";
             AssetSize.MinimumWidth = 10;
             AssetSize.Name = "AssetSize";
@@ -119,9 +120,9 @@
             // AssetField
             // 
             AssetField.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            AssetField.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            AssetField.DefaultCellStyle = dataGridViewCellStyle6;
             AssetField.HeaderText = "Field";
             AssetField.MinimumWidth = 10;
             AssetField.Name = "AssetField";
@@ -138,7 +139,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(32, 32);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { addFileToolStripMenuItem, loadToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { addFileToolStripMenuItem, addFolderToolStripMenuItem, loadToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(2242, 42);
@@ -243,6 +244,13 @@
             openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
             openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
             // 
+            // addFolderToolStripMenuItem
+            // 
+            addFolderToolStripMenuItem.Name = "addFolderToolStripMenuItem";
+            addFolderToolStripMenuItem.Size = new Size(150, 38);
+            addFolderToolStripMenuItem.Text = "Add Folder";
+            addFolderToolStripMenuItem.Click += addFolderToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -285,5 +293,6 @@
         private ToolStripMenuItem loadGZIPBundleToolStripMenuItem;
         private ToolStripMenuItem loadAESBundleToolStripMenuItem;
         private ToolStripMenuItem loadGZIPandAESBundleToolStripMenuItem;
+        private ToolStripMenuItem addFolderToolStripMenuItem;
     }
 }

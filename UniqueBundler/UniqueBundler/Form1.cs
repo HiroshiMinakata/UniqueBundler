@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 using static UniqueBundler.FileManager;
 using static UniqueBundler.Form1;
@@ -202,6 +203,15 @@ namespace UniqueBundler
             GetToalSize();
         }
 
+        // Add forlder
+        private void addFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] folderPaths = GetFolderPaths();
+            if (folderPaths == null) return;
+            AddDatas(folderPaths);
+            GetToalSize();
+        }
+
         // Drag file
         private void dataGridView1_DragEnter(object sender, DragEventArgs e)
         {
@@ -324,18 +334,42 @@ namespace UniqueBundler
             }
         }
 
-        private void AddDatas(string[] fileNames)
+        private void AddDatas(string[] filePaths)
         {
-            foreach (string fileName in fileNames)
+            if (filePaths == null) return;
+            foreach (string filePath in filePaths)
             {
-                if (fileName == "") break;
-                string[] datas = file.GetLineValue(fileName);
-                if (datas == null) continue;
-                SetLine(datas);
-                string className = datas[2];
-                SetValues(className);
-                ReloadSize(dataGridView1.Rows.Count - 2);
+                if (Directory.Exists(filePath))
+                    ProcessDirectory(filePath);
+                else if (File.Exists(filePath))
+                    ProcessFile(filePath);
             }
+        }
+
+        private void ProcessDirectory(string directoryPath)
+        {
+            string[] fileEntries = Directory.GetFiles(directoryPath);
+            foreach (string fileName in fileEntries)
+            {
+                ProcessFile(fileName);
+            }
+
+            string[] subdirectoryEntries = Directory.GetDirectories(directoryPath);
+            foreach (string subdirectory in subdirectoryEntries)
+            {
+                ProcessDirectory(subdirectory);
+            }
+        }
+
+        private void ProcessFile(string fileName)
+        {
+            if (fileName == "") return;
+            string[] datas = file.GetLineValue(fileName);
+            if (datas == null) return;
+            SetLine(datas);
+            string className = datas[2];
+            SetValues(className);
+            ReloadSize(dataGridView1.Rows.Count - 2);
         }
 
         private void SetLine(string[] values, int targetRow = -1)

@@ -395,6 +395,15 @@ namespace UniqueBundler
         public static string AllFileFilter = "All files (*.*)|*.*";
         public static string ABFileFilter = "AssetBundle (*.ab*)|*.ab*";
 
+        public static string[] GetFolderPaths()
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                return new string[] { folderBrowserDialog.SelectedPath };
+            else
+                return new string[0];
+        }
+
         public static string FormatFileSize(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
