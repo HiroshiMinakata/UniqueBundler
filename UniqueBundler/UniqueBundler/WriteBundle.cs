@@ -78,12 +78,12 @@ namespace UniqueBundler
             Write();
         }
 
-        public void CompressWrite()
+        public void GZIPWrite()
         {
             string outputPath = saveFileName;
             saveFileName = Path.GetTempFileName();
             Write();
-            CompressFile(saveFileName, outputPath);
+            GZIPFile(saveFileName, outputPath);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
         }
@@ -96,6 +96,20 @@ namespace UniqueBundler
             AESFile(saveFileName, outputPath, key, iv);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
+        }
+
+        public void GZIPandAESWrite(byte[] key, byte[] iv)
+        {
+            string outputPath = saveFileName;
+            string gzipFileName = Path.GetTempFileName();
+            saveFileName = Path.GetTempFileName();
+            Write();
+            GZIPFile(saveFileName, gzipFileName);
+            if (File.Exists(saveFileName))
+                File.Delete(saveFileName);
+            AESFile(gzipFileName, outputPath, key, iv);
+            if (File.Exists(gzipFileName))
+                File.Delete(gzipFileName);
         }
 
         private void Write()
@@ -261,7 +275,7 @@ namespace UniqueBundler
             return utf8ByteCount + lengthByteCount;
         }
 
-        public void CompressFile(string inputFile, string outputFile)
+        public void GZIPFile(string inputFile, string outputFile)
         {
             using (FileStream originalFileStream = File.OpenRead(inputFile))
             using (FileStream compressedFileStream = File.Create(outputFile))

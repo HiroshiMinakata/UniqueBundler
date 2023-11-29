@@ -89,7 +89,7 @@ namespace UniqueBundler
             return true;
         }
 
-        public bool CompressedRead()
+        public bool GZIPRead()
         {
             try
             {
@@ -114,6 +114,30 @@ namespace UniqueBundler
             {
                 string tempFileName = Path.GetTempFileName();
                 AESFile(loadFileName, tempFileName, key, iv);
+                loadFileName = tempFileName;
+                Read();
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load file.\nError: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool GZIPandAESRead(byte[] key, byte[] iv)
+        {
+            try
+            {
+                string gzipFileName = Path.GetTempFileName();
+                AESFile(loadFileName, gzipFileName, key, iv);
+                string tempFileName = Path.GetTempFileName();
+                DecompressFile(gzipFileName, tempFileName);
+                if (File.Exists(gzipFileName))
+                    File.Delete(gzipFileName);
                 loadFileName = tempFileName;
                 Read();
                 if (File.Exists(tempFileName))

@@ -43,13 +43,13 @@ namespace UniqueBundler
             SetLoadData(loadBundle);
         }
 
-        // Compressed
+        // GZIP
         private void loadGZIPBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
             LoadBundle loadBundle = new LoadBundle(loadFileName);
-            bool loaded = loadBundle.CompressedRead();
+            bool loaded = loadBundle.GZIPRead();
             if (loaded == false) return;
             SetLoadData(loadBundle);
         }
@@ -63,6 +63,19 @@ namespace UniqueBundler
             PasswordForm passForm = new PasswordForm();
             if (passForm.ShowDialog() != DialogResult.OK) return;
             bool loaded = loadBundle.AESRead(passForm.key, passForm.iv);
+            if (loaded == false) return;
+            SetLoadData(loadBundle);
+        }
+
+        // GZIP and AES
+        private void loadGZIPandAESBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
+            if (loadFileName == "") return;
+            LoadBundle loadBundle = new LoadBundle(loadFileName);
+            PasswordForm passForm = new PasswordForm();
+            if (passForm.ShowDialog() != DialogResult.OK) return;
+            bool loaded = loadBundle.GZIPandAESRead(passForm.key, passForm.iv);
             if (loaded == false) return;
             SetLoadData(loadBundle);
         }
@@ -102,7 +115,7 @@ namespace UniqueBundler
         #region Save file
 
         // Normal
-        private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveNormalBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int assetNum = GetAssetNum();
             if (assetNum == 0)
@@ -115,8 +128,8 @@ namespace UniqueBundler
             writeBundle.NormalWrite();
         }
 
-        // Compressed
-        private void saveCompressedBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        // GZIP
+        private void saveGZIPBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int assetNum = GetAssetNum();
             if (assetNum == 0)
@@ -126,7 +139,7 @@ namespace UniqueBundler
             }
             WriteBundle writeBundle = Save();
             if (writeBundle == null) return;
-            writeBundle.CompressWrite();
+            writeBundle.GZIPWrite();
         }
 
         // AES
@@ -145,6 +158,24 @@ namespace UniqueBundler
             PasswordForm passForm = new PasswordForm();
             if (passForm.ShowDialog() != DialogResult.OK) return;
             writeBundle.AESWrite(passForm.key, passForm.iv);
+        }
+
+        // GZIP and AES
+        private void saveAESAndToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int assetNum = GetAssetNum();
+            if (assetNum == 0)
+            {
+                MessageBox.Show("Please select one or more.", "Save bundle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            WriteBundle writeBundle = Save();
+
+            if (writeBundle == null) return;
+
+            PasswordForm passForm = new PasswordForm();
+            if (passForm.ShowDialog() != DialogResult.OK) return;
+            writeBundle.GZIPandAESWrite(passForm.key, passForm.iv);
         }
 
         private WriteBundle Save()

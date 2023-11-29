@@ -185,6 +185,7 @@
             loadGZIPandAESBundleToolStripMenuItem.Name = "loadGZIPandAESBundleToolStripMenuItem";
             loadGZIPandAESBundleToolStripMenuItem.Size = new Size(372, 44);
             loadGZIPandAESBundleToolStripMenuItem.Text = "GZIP and AES Bundle";
+            loadGZIPandAESBundleToolStripMenuItem.Click += loadGZIPandAESBundleToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
@@ -198,14 +199,14 @@
             saveBundleToolStripMenuItem.Name = "saveBundleToolStripMenuItem";
             saveBundleToolStripMenuItem.Size = new Size(372, 44);
             saveBundleToolStripMenuItem.Text = "Normal Bundle";
-            saveBundleToolStripMenuItem.Click += saveBundleToolStripMenuItem_Click;
+            saveBundleToolStripMenuItem.Click += saveNormalBundleToolStripMenuItem_Click;
             // 
             // saveGZIPBundleToolStripMenuItem
             // 
             saveGZIPBundleToolStripMenuItem.Name = "saveGZIPBundleToolStripMenuItem";
             saveGZIPBundleToolStripMenuItem.Size = new Size(372, 44);
             saveGZIPBundleToolStripMenuItem.Text = "GZIP Bundle";
-            saveGZIPBundleToolStripMenuItem.Click += saveCompressedBundleToolStripMenuItem_Click;
+            saveGZIPBundleToolStripMenuItem.Click += saveGZIPBundleToolStripMenuItem_Click;
             // 
             // saveAESBundleToolStripMenuItem
             // 
@@ -219,6 +220,7 @@
             saveAESAndToolStripMenuItem.Name = "saveAESAndToolStripMenuItem";
             saveAESAndToolStripMenuItem.Size = new Size(372, 44);
             saveAESAndToolStripMenuItem.Text = "GZIP and AES Bundle";
+            saveAESAndToolStripMenuItem.Click += saveAESAndToolStripMenuItem_Click;
             // 
             // optionToolStripMenuItem
             // 
