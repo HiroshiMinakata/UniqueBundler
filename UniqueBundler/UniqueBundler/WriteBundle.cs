@@ -17,6 +17,7 @@ using static UniqueBundler.Form1;
 * // for the number of Asset
 * {
 *   string name;
+*   int fieldNum;
 *   long offset;
 *   long assetSize;
 * }
@@ -112,6 +113,7 @@ namespace UniqueBundler
             for (int i = 0; i < assetNum; i++)
             {
                 writer.Write(assetNames[i]);
+                writer.Write(assetsDatas[i].Length);
                 writer.Write(currentOffset); // offset
                 long assetSize = GetSize(assetsDatas[i]); // assetSize
                 writer.Write(assetSize);
@@ -126,6 +128,7 @@ namespace UniqueBundler
             for (int i = 0; i < assetNum; i++)
             {
                 size += Encoding.UTF8.GetBytes(assetNames[i]).Length + 1;
+                size += sizeof(int);
                 size += sizeof(long);
                 size += sizeof(long);
             }
@@ -182,8 +185,6 @@ namespace UniqueBundler
                             writer.Write(buffer, 0, bytesRead);
                     }
                 }
-                else
-                    writer.Write(0);
             }
             else if (obj is List<object> objectList)
             {
@@ -201,9 +202,7 @@ namespace UniqueBundler
         {
             for (int i = 0; i < assetNum; i++)
             {
-                writer.Write(formats[i].Length);
                 writer.Write(formats[i]);
-                writer.Write(classNames[i].Length);
                 writer.Write(classNames[i]);
             }
         }
@@ -213,10 +212,8 @@ namespace UniqueBundler
             int size = 0;
             for (int i = 0; i < assetNum; i++)
             {
-                size += sizeof(int);
-                size += Encoding.UTF8.GetBytes(formats[i]).Length;
-                size += sizeof(int);
-                size += Encoding.UTF8.GetBytes(classNames[i]).Length;
+                size += Encoding.UTF8.GetBytes(formats[i]).Length + 1;
+                size += Encoding.UTF8.GetBytes(classNames[i]).Length + 1;
             }
             return size;
         }

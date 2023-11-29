@@ -1,11 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
-using System.Reflection;
 using System.Text;
-using System.Xml.Linq;
-using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
-using static UniqueBundler.FileManager;
 
 namespace UniqueBundler
 {
@@ -246,7 +241,7 @@ namespace UniqueBundler
                 size += sizeof(char) * stringValue.Length;
             else if (obj is byte[] byteArray)
             {
-                size += sizeof(int);
+                size += sizeof(long);
                 string fileName = Encoding.UTF8.GetString(byteArray);
                 if (!File.Exists(fileName)) return;
                 FileInfo fileInfo = new FileInfo(fileName);

@@ -13,7 +13,7 @@ namespace UniqueBundler
 
         private FileManager file;
         private const int AssetNameIndex = 0;
-        private const int FormatIndex = 0;
+        private const int FormatIndex = 1;
         private const int ClassIndex = 2;
         private const int SizeIndex = 3;
         private const int FieldIndex = 4;
@@ -28,6 +28,72 @@ namespace UniqueBundler
         }
 
         #region Event
+        #region Load from file
+        private void loadBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
+            if (loadFileName == "") return;
+            LoadBundle loadBundle = new LoadBundle(loadFileName);
+            loadBundle.NormalRead();
+            SetLoadData(loadBundle);
+        }
+
+        private void SetLoadData(LoadBundle loadBundle)
+        {
+            dataGridView1.Rows.Clear();
+
+            int assetNum = loadBundle.assetNum;
+            ClassFieldData[][] assetsDatas = loadBundle.assetsFieldDatas;
+            string[] assetNames = new string[assetNum];
+            string[] formats = new string[assetNum];
+            string[] classNames = new string[assetNum];
+            string[] fieldStrings = new string[assetNum];
+
+            for (int i = 0; i < assetNum; i++)
+            {
+                assetNames[i] = loadBundle.metaDatas[i].name;
+                formats[i] = loadBundle.footers[i].format;
+                classNames[i] = loadBundle.footers[i].className;
+                fieldStrings[i] = GetFieldString(assetsDatas[i]);
+            }
+
+            for (int i = 0; i < assetNum; i++)
+            {
+                dataGridView1.Rows.Add(assetNames[i], formats[i], classNames[i], "", "", true);
+                dataGridView1.Rows[i].Cells[IsIncludeIndex].Tag = assetsDatas[i];
+                ReloadSize(i);
+            }
+        }
+        #endregion
+
+        #region Save file
+        private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WriteBundle writeBundle = Save();
+            if (writeBundle == null) return;
+            writeBundle.NormalWrite();
+        }
+
+        private WriteBundle Save()
+        {
+            string saveFileName = GetSaveFileName(".ab", ABFileFilter);
+            if (saveFileName == "") return null;
+            int assetNum = GetAssetNum();
+            if (assetNum == 0)
+            {
+                File.WriteAllText(saveFileName, "");
+                return null;
+            }
+            ClassFieldData[][] assetsDatas = new ClassFieldData[assetNum][];
+            string[] assetNames = new string[assetNum];
+            string[] formats = new string[assetNum];
+            string[] classNames = new string[assetNum];
+
+            GetWriteAssetsDatas(assetsDatas, assetNames, classNames, formats);
+            return new WriteBundle(1, assetNames, assetsDatas, formats, classNames, saveFileName);
+        }
+        #endregion
+
         // Add file
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -92,6 +158,13 @@ namespace UniqueBundler
 
             GetToalSize();
         }
+        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.IsCurrentCellDirty)
+            {
+                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
 
         // Sort
         private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -108,28 +181,6 @@ namespace UniqueBundler
                 dataGridView1.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection =
                     direction == ListSortDirection.Ascending ? SortOrder.Ascending : SortOrder.Descending;
             }
-        }
-
-        // Save
-        private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string saveFileName = GetSaveFileName(".ab", ABFileFilter);
-            if (saveFileName == "") return;
-            int assetNum = GetAssetNum();
-            if (assetNum == 0)
-            {
-                File.WriteAllText(saveFileName, "");
-                return;
-            }
-            ClassFieldData[][] assetsDatas = new ClassFieldData[assetNum][];
-            string[] assetNames = new string[assetNum];
-            string[] formats = new string[assetNum];
-            string[] classNames = new string[assetNum];
-
-            GetWriteAssetsDatas(assetsDatas, assetNames, classNames, formats);
-            WriteBundle writeBundle = new WriteBundle(1, assetNames, assetsDatas, formats, classNames, saveFileName);
-
-            writeBundle.NormalWrite();
         }
 
         // Added
@@ -319,14 +370,6 @@ namespace UniqueBundler
         {
             ClassFieldData[] data = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
             return data;
-        }
-
-        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            if (dataGridView1.IsCurrentCellDirty)
-            {
-                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
         }
     }
 }

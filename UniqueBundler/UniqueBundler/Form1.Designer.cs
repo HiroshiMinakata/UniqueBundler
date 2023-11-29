@@ -135,7 +135,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(2242, 40);
+            menuStrip1.Size = new Size(2242, 42);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -143,19 +143,20 @@
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadBundleToolStripMenuItem, addFileToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(71, 36);
+            fileToolStripMenuItem.Size = new Size(71, 38);
             fileToolStripMenuItem.Text = "File";
             // 
             // loadBundleToolStripMenuItem
             // 
             loadBundleToolStripMenuItem.Name = "loadBundleToolStripMenuItem";
-            loadBundleToolStripMenuItem.Size = new Size(280, 44);
+            loadBundleToolStripMenuItem.Size = new Size(359, 44);
             loadBundleToolStripMenuItem.Text = "Load Bundle";
+            loadBundleToolStripMenuItem.Click += loadBundleToolStripMenuItem_Click;
             // 
             // addFileToolStripMenuItem
             // 
             addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(280, 44);
+            addFileToolStripMenuItem.Size = new Size(359, 44);
             addFileToolStripMenuItem.Text = "Add File";
             addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
             // 
@@ -163,7 +164,7 @@
             // 
             saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem });
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(84, 36);
+            saveToolStripMenuItem.Size = new Size(84, 38);
             saveToolStripMenuItem.Text = "Save";
             // 
             // saveBundleToolStripMenuItem
@@ -177,7 +178,7 @@
             // 
             optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
             optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            optionToolStripMenuItem.Size = new Size(108, 36);
+            optionToolStripMenuItem.Size = new Size(108, 38);
             optionToolStripMenuItem.Text = "Option";
             // 
             // openClassConfigToolStripMenuItem

@@ -45,7 +45,7 @@ namespace UniqueBundler
         string loadFileName;
 
         int version;
-        int assetNum;
+        public int assetNum;
         int headerSize;
         int metaDataSize;
         long totalAssetSize;
@@ -142,6 +142,8 @@ namespace UniqueBundler
         #region Footer
         private void ReadFooter(BinaryReader reader, FileStream stream)
         {
+            //2242 - 2238
+            long offs = headerSize + metaDataSize;
             long offset = headerSize + metaDataSize + totalAssetSize;
             stream.Seek(offset, SeekOrigin.Begin);
             for (int i = 0; i < assetNum; i++)
