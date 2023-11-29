@@ -112,7 +112,7 @@
             Controls.Add(Cancel);
             Controls.Add(dataGridView1);
             Name = "FieldForm";
-            Text = "Field Form";
+            Text = "Field";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
