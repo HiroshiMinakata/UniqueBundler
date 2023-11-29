@@ -260,7 +260,7 @@ namespace UniqueBundler
             }
         }
         
-        private string GetFieldString(ClassFieldData[] classFieldDatas)
+        public static string GetFieldString(ClassFieldData[] classFieldDatas)
         {
             string str = "";
 

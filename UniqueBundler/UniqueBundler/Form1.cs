@@ -219,7 +219,12 @@ namespace UniqueBundler
             var data = GetData(row);
             FieldForm propertyForm = new FieldForm(data);
             if (propertyForm.ShowDialog() == DialogResult.OK)
+            {
                 ReloadSize(row);
+                ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
+                string fieldString = GetFieldString(fieldData);
+                dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
+            }
         }
 
         private long ReloadSize(int row = -1)
