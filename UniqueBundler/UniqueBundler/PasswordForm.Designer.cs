@@ -101,6 +101,8 @@
             Controls.Add(IV_TextBox);
             Controls.Add(Cancel_Button);
             Controls.Add(OK_Button);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "PasswordForm";
             Text = "Plase input key and IV";
             ResumeLayout(false);

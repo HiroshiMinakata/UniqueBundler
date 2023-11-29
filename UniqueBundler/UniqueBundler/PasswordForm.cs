@@ -8,6 +8,7 @@ namespace UniqueBundler
         public PasswordForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         public byte[] key;
