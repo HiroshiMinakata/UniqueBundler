@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text;
 using static UniqueBundler.FileManager;
 
 namespace UniqueBundler
@@ -13,7 +14,7 @@ namespace UniqueBundler
 
         private FileManager file;
         private const int AssetNameIndex = 0;
-        private const int FormatIndex = 1;
+        private const int ExtensionIndex = 1;
         private const int ClassIndex = 2;
         private const int SizeIndex = 3;
         private const int FieldIndex = 4;
@@ -220,7 +221,7 @@ namespace UniqueBundler
                 assetsDatas[num] = GetData(row);
                 var assetNameValue = dataGridView1.Rows[row].Cells[AssetNameIndex].Value;
                 assetNames[num] = assetNameValue != null ? assetNameValue.ToString() : "";
-                var formatValue = dataGridView1.Rows[row].Cells[FormatIndex].Value;
+                var formatValue = dataGridView1.Rows[row].Cells[ExtensionIndex].Value;
                 formats[num] = formatValue != null ? formatValue.ToString() : "";
                 var classNameValue = dataGridView1.Rows[row].Cells[ClassIndex].Value;
                 classNames[num] = classNameValue != null ? classNameValue.ToString() : "";
@@ -284,6 +285,7 @@ namespace UniqueBundler
                 ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
                 string fieldString = GetFieldString(fieldData);
                 dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
+                SetExtension(row);
             }
         }
 
@@ -381,6 +383,24 @@ namespace UniqueBundler
         {
             ClassFieldData[] data = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
             return data;
+        }
+
+        private void SetExtension(int row)
+        {
+            ClassFieldData[] datas = GetData(row);
+            foreach (ClassFieldData data in datas)
+            {
+                if (data.data.GetType() != typeof(byte[])) return;
+                string path = Encoding.UTF8.GetString((byte[])data.data);
+                string ext = Path.GetExtension(path);
+                if (ext == null)
+                    return;
+                ext = ext.Substring(1);
+                if (ext == "tmp")
+                    return;
+                dataGridView1.Rows[row].Cells[ExtensionIndex].Value = ext;
+                return;
+            }
         }
     }
 }
