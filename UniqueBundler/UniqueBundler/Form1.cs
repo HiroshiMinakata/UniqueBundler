@@ -328,6 +328,7 @@ namespace UniqueBundler
                 ClassFieldData[] datas = GetData(row);
                 foreach (ClassFieldData data in datas)
                 {
+                    if (data.data == null) continue;
                     if (data.data.GetType() != typeof(byte[])) continue;
                     string path = Encoding.UTF8.GetString((byte[])data.data);
                     string ext = Path.GetExtension(path);
@@ -526,13 +527,15 @@ namespace UniqueBundler
             //totalSize += sizeof(int) * 5;
             //totalSize += sizeof(long) * 1;
 
+            int assetNum = 0;
             for (int row = 0; row < dataGridView1.RowCount; row++)
             {
                 bool isInclude = Convert.ToBoolean(dataGridView1.Rows[row].Cells[IsIncludeIndex].Value);
                 if (isInclude == false) continue;
                 totalSize += ReloadSize(row);
+                assetNum++;
             }
-
+            AssetName.HeaderText = $"Name ({assetNum})";
             AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
             return totalSize;
         }

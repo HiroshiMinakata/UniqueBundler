@@ -84,6 +84,7 @@ namespace UniqueBundler
         {
             if (className == null) return null;
             int classIndex = Array.IndexOf(classNames, className);
+            if (classIndex == -1) return GetDefaultClassFieldData()[0];
             return GetDefaultClassFieldData()[classIndex];
         }
 
