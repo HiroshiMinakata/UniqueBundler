@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             AssetName = new DataGridViewTextBoxColumn();
             AssetExtension = new DataGridViewTextBoxColumn();
@@ -40,6 +40,7 @@
             IsInclude = new DataGridViewCheckBoxColumn();
             menuStrip1 = new MenuStrip();
             addFileToolStripMenuItem = new ToolStripMenuItem();
+            addFolderToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
             loadNormalBundleToolStripMenuItem = new ToolStripMenuItem();
             loadGZIPBundleToolStripMenuItem = new ToolStripMenuItem();
@@ -53,7 +54,6 @@
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
             openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
-            addFolderToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -90,8 +90,8 @@
             // 
             // AssetExtension
             // 
-            dataGridViewCellStyle4.BackColor = Color.LightGray;
-            AssetExtension.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = Color.LightGray;
+            AssetExtension.DefaultCellStyle = dataGridViewCellStyle1;
             AssetExtension.HeaderText = "Extension";
             AssetExtension.MinimumWidth = 10;
             AssetExtension.Name = "AssetExtension";
@@ -108,8 +108,8 @@
             // 
             // AssetSize
             // 
-            dataGridViewCellStyle5.BackColor = Color.LightGray;
-            AssetSize.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.BackColor = Color.LightGray;
+            AssetSize.DefaultCellStyle = dataGridViewCellStyle2;
             AssetSize.HeaderText = "Size";
             AssetSize.MinimumWidth = 10;
             AssetSize.Name = "AssetSize";
@@ -120,9 +120,9 @@
             // AssetField
             // 
             AssetField.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            AssetField.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            AssetField.DefaultCellStyle = dataGridViewCellStyle3;
             AssetField.HeaderText = "Field";
             AssetField.MinimumWidth = 10;
             AssetField.Name = "AssetField";
@@ -142,22 +142,29 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { addFileToolStripMenuItem, addFolderToolStripMenuItem, loadToolStripMenuItem, saveToolStripMenuItem, optionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(2242, 42);
+            menuStrip1.Size = new Size(2242, 40);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
             // addFileToolStripMenuItem
             // 
             addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            addFileToolStripMenuItem.Size = new Size(121, 38);
+            addFileToolStripMenuItem.Size = new Size(121, 36);
             addFileToolStripMenuItem.Text = "Add File";
             addFileToolStripMenuItem.Click += addFileToolStripMenuItem_Click;
+            // 
+            // addFolderToolStripMenuItem
+            // 
+            addFolderToolStripMenuItem.Name = "addFolderToolStripMenuItem";
+            addFolderToolStripMenuItem.Size = new Size(150, 36);
+            addFolderToolStripMenuItem.Text = "Add Folder";
+            addFolderToolStripMenuItem.Click += addFolderToolStripMenuItem_Click;
             // 
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadNormalBundleToolStripMenuItem, loadGZIPBundleToolStripMenuItem, loadAESBundleToolStripMenuItem, loadGZIPandAESBundleToolStripMenuItem });
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(85, 38);
+            loadToolStripMenuItem.Size = new Size(85, 36);
             loadToolStripMenuItem.Text = "Load";
             // 
             // loadNormalBundleToolStripMenuItem
@@ -192,7 +199,7 @@
             // 
             saveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveBundleToolStripMenuItem, saveGZIPBundleToolStripMenuItem, saveAESBundleToolStripMenuItem, saveAESAndToolStripMenuItem });
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(84, 38);
+            saveToolStripMenuItem.Size = new Size(84, 36);
             saveToolStripMenuItem.Text = "Save";
             // 
             // saveBundleToolStripMenuItem
@@ -227,7 +234,7 @@
             // 
             optionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openClassConfigToolStripMenuItem, openExtensionConfigToolStripMenuItem });
             optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            optionToolStripMenuItem.Size = new Size(108, 38);
+            optionToolStripMenuItem.Size = new Size(108, 36);
             optionToolStripMenuItem.Text = "Option";
             // 
             // openClassConfigToolStripMenuItem
@@ -244,13 +251,6 @@
             openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
             openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
             // 
-            // addFolderToolStripMenuItem
-            // 
-            addFolderToolStripMenuItem.Name = "addFolderToolStripMenuItem";
-            addFolderToolStripMenuItem.Size = new Size(150, 38);
-            addFolderToolStripMenuItem.Text = "Add Folder";
-            addFolderToolStripMenuItem.Click += addFolderToolStripMenuItem_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -262,6 +262,7 @@
             Margin = new Padding(4, 2, 4, 2);
             Name = "Form1";
             Text = "Unique Bundler 1.0";
+            FormClosing += Form1_FormClosing;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

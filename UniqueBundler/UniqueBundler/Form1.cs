@@ -15,6 +15,7 @@ namespace UniqueBundler
         }
 
         private FileManager file;
+        private List<string> tempFileNames = new List<string>();
         private const int AssetNameIndex = 0;
         private const int ExtensionIndex = 1;
         private const int ClassIndex = 2;
@@ -42,6 +43,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.NormalRead();
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            GetTempFileNames();
         }
 
         // GZIP
@@ -53,6 +55,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.GZIPRead();
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            GetTempFileNames();
         }
 
         // AES
@@ -66,6 +69,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.AESRead(passForm.key, passForm.iv);
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            GetTempFileNames();
         }
 
         // GZIP and AES
@@ -79,6 +83,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.GZIPandAESRead(passForm.key, passForm.iv);
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            GetTempFileNames();
         }
 
         private void SetLoadData(LoadBundle loadBundle)
@@ -306,7 +311,32 @@ namespace UniqueBundler
         {
             GetToalSize();
         }
+
+        // Closing
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach(string tempFileName in tempFileNames)
+                if (File.Exists(tempFileName))
+                    File.Delete(tempFileName);
+        }
         #endregion
+
+        private void GetTempFileNames()
+        {
+            for (int row = 0; row < dataGridView1.Rows.Count; row++)
+            {
+                ClassFieldData[] datas = GetData(row);
+                foreach (ClassFieldData data in datas)
+                {
+                    if (data.data.GetType() != typeof(byte[])) continue;
+                    string path = Encoding.UTF8.GetString((byte[])data.data);
+                    string ext = Path.GetExtension(path);
+                    if (ext != ".tmp")
+                        continue;
+                    tempFileNames.Add(path);
+                }
+            }
+        }
 
         private int GetAssetNum()
         {
@@ -414,28 +444,31 @@ namespace UniqueBundler
                 ClassFieldData[] fieldData = (ClassFieldData[])dataGridView1.Rows[row].Cells[IsIncludeIndex].Tag;
                 string fieldString = GetFieldString(fieldData);
                 dataGridView1.Rows[row].Cells[FieldIndex].Value = fieldString;
-                string ext = SetExtension(row);
-                UpdateClassName(row, ext);
+                string[] exts = SetExtension(row);
+                if (exts.Length == 0)
+                    return;
+                UpdateClassName(row, exts[0]);
             }
         }
 
-        private string SetExtension(int row)
+        private string[] SetExtension(int row)
         {
+            List<string> exts = new List<string>();
             ClassFieldData[] datas = GetData(row);
             foreach (ClassFieldData data in datas)
             {
-                if (data.data.GetType() != typeof(byte[])) return "";
+                if (data.data.GetType() != typeof(byte[])) continue;
                 string path = Encoding.UTF8.GetString((byte[])data.data);
                 string ext = Path.GetExtension(path);
                 if (ext == null || ext == "")
-                    return "";
+                    continue;
                 ext = ext.Substring(1);
                 if (ext == "tmp")
-                    return "";
+                    continue;
                 dataGridView1.Rows[row].Cells[ExtensionIndex].Value = ext;
-                return ext;
+                exts.Add(ext);
             }
-            return "";
+            return exts.ToArray();
         }
 
         private void UpdateClassName(int row, string extension)
