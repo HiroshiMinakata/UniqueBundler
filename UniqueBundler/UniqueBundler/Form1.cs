@@ -66,12 +66,19 @@ namespace UniqueBundler
                 dataGridView1.Rows[i].Cells[IsIncludeIndex].Tag = assetsDatas[i];
                 ReloadSize(i);
             }
+            InitializeData(dataGridView1.Rows.Count - 1);
         }
         #endregion
 
         #region Save file
         private void saveBundleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int assetNum = GetAssetNum();
+            if (assetNum == 0)
+            {
+                MessageBox.Show("Please select one or more.", "Save bundle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             WriteBundle writeBundle = Save();
             if (writeBundle == null) return;
             writeBundle.NormalWrite();
@@ -80,13 +87,9 @@ namespace UniqueBundler
         private WriteBundle Save()
         {
             string saveFileName = GetSaveFileName(".ab", ABFileFilter);
-            if (saveFileName == "") return null;
-            int assetNum = GetAssetNum();
-            if (assetNum == 0)
-            {
-                File.WriteAllText(saveFileName, "");
+            if (saveFileName == "")
                 return null;
-            }
+            int assetNum = GetAssetNum();
             ClassFieldData[][] assetsDatas = new ClassFieldData[assetNum][];
             string[] assetNames = new string[assetNum];
             string[] formats = new string[assetNum];
@@ -215,9 +218,12 @@ namespace UniqueBundler
             {
                 if (Convert.ToBoolean(dataGridView1.Rows[row].Cells[IsIncludeIndex].Value) == false) continue;
                 assetsDatas[num] = GetData(row);
-                assetNames[num] = dataGridView1.Rows[row].Cells[AssetNameIndex].Value.ToString();
-                formats[num] = dataGridView1.Rows[row].Cells[FormatIndex].Value.ToString();
-                classNames[num] = dataGridView1.Rows[row].Cells[ClassIndex].Value.ToString();
+                var assetNameValue = dataGridView1.Rows[row].Cells[AssetNameIndex].Value;
+                assetNames[num] = assetNameValue != null ? assetNameValue.ToString() : "";
+                var formatValue = dataGridView1.Rows[row].Cells[FormatIndex].Value;
+                formats[num] = formatValue != null ? formatValue.ToString() : "";
+                var classNameValue = dataGridView1.Rows[row].Cells[ClassIndex].Value;
+                classNames[num] = classNameValue != null ? classNameValue.ToString() : "";
                 num++;
             }
         }
@@ -321,8 +327,8 @@ namespace UniqueBundler
             long totalSize = 0;
 
             // Header size
-            //totalSize += sizeof(int) * 4;
-            //totalSize += sizeof(long) * 2;
+            //totalSize += sizeof(int) * 5;
+            //totalSize += sizeof(long) * 1;
 
             for (int row = 0; row < dataGridView1.RowCount; row++)
             {
@@ -341,6 +347,8 @@ namespace UniqueBundler
 
             ClassFieldData[] oldData = GetData(row);
             ClassFieldData[] newData = file.GetDefaultFieldDatas(newClassName).ToArray();
+
+            if (oldData == null) return;
 
             // Copy data
             int minLength = Math.Min(oldData.Length, newData.Length);

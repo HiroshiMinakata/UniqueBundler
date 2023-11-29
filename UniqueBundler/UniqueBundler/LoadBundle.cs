@@ -142,8 +142,6 @@ namespace UniqueBundler
         #region Footer
         private void ReadFooter(BinaryReader reader, FileStream stream)
         {
-            //2242 - 2238
-            long offs = headerSize + metaDataSize;
             long offset = headerSize + metaDataSize + totalAssetSize;
             stream.Seek(offset, SeekOrigin.Begin);
             for (int i = 0; i < assetNum; i++)
@@ -182,9 +180,10 @@ namespace UniqueBundler
                 return reader.ReadBoolean();
             else if (sample is string)
                 return reader.ReadString();
-            else if (sample is byte[])
+            else if (sample is byte[] data)
             {
                 string fileName = ReadDataToTempFile(reader);
+                if(fileName == null) return data;
                 return Encoding.UTF8.GetBytes(fileName);
             }
             else if (sample is List<object> samples)

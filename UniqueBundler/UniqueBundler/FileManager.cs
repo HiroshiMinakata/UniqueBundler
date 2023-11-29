@@ -82,6 +82,7 @@ namespace UniqueBundler
 
         public ClassFieldData[] GetDefaultFieldDatas(string className)
         {
+            if (className == null) return null;
             int classIndex = Array.IndexOf(classNames, className);
             return GetDefaultClassFieldData()[classIndex];
         }
@@ -217,6 +218,7 @@ namespace UniqueBundler
         public static long GetSize(ClassFieldData[] classFieldDatas)
         {
             long size = 0;
+            if (classFieldDatas == null) return 0;
             foreach (ClassFieldData classFieldData in classFieldDatas)
             {
                 // classFieldData.isUse
@@ -258,7 +260,7 @@ namespace UniqueBundler
         public static string GetFieldString(ClassFieldData[] classFieldDatas)
         {
             string str = "";
-
+            if (classFieldDatas == null) return str;
             foreach (ClassFieldData classFieldData in classFieldDatas)
             {
                 str += classFieldData.name;

@@ -13,11 +13,13 @@ namespace UniqueBundler
 
         private void InitializeDataGridView()
         {
+            if(assetDatas == null) return;
             foreach (FileManager.ClassFieldData assetData in assetDatas)
             {
                 dataGridView1.Rows.Add();
                 int row = dataGridView1.Rows.Count - 1;
 
+                if (assetData.data == null) return;
                 // File
                 if (assetData.data.GetType() == typeof(byte[]))
                 {

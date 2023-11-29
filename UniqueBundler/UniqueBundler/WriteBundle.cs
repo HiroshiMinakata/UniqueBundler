@@ -171,6 +171,12 @@ namespace UniqueBundler
                 writer.Write(stringValue);
             else if (obj is byte[] byteArray)
             {
+                if (byteArray.Length == 0)
+                {
+                    writer.Write(0);
+                    writer.Write(0);
+                    return;
+                }
                 string fileName = Encoding.UTF8.GetString(byteArray);
                 if (File.Exists(fileName))
                 {
