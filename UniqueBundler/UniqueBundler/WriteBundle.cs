@@ -7,6 +7,7 @@ using System.Text;
 * UTF-8
 * 
 * ----- Header -----
+* int mode;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -75,6 +76,7 @@ namespace UniqueBundler
         public void NormalWrite()
         {
             Write();
+            WritePrependMode(saveFileName, 0);
         }
 
         public void GZIPWrite()
@@ -85,6 +87,7 @@ namespace UniqueBundler
             GZIPFile(saveFileName, outputPath);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
+            WritePrependMode(outputPath, 1);
         }
 
         public void AESWrite(byte[] key, byte[] iv)
@@ -95,6 +98,7 @@ namespace UniqueBundler
             AESFile(saveFileName, outputPath, key, iv);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
+            WritePrependMode(outputPath, 2);
         }
 
         public void GZIPandAESWrite(byte[] key, byte[] iv)
@@ -109,6 +113,7 @@ namespace UniqueBundler
             AESFile(gzipFileName, outputPath, key, iv);
             if (File.Exists(gzipFileName))
                 File.Delete(gzipFileName);
+            WritePrependMode(outputPath, 3);
         }
 
         private void Write()
@@ -282,6 +287,20 @@ namespace UniqueBundler
                 using (FileStream inputStream = new FileStream(inputFile, FileMode.Open))
                     inputStream.CopyTo(cryptoStream);
             }
+        }
+
+        private void WritePrependMode(string fileName, int mode)
+        {
+            string tempFileName = Path.GetTempFileName();
+            using (FileStream tempFileStream = new FileStream(tempFileName, FileMode.Open, FileAccess.Write))
+            using (BinaryWriter writer = new BinaryWriter(tempFileStream))
+            {
+                writer.Write(mode);
+                using (FileStream originalFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                    originalFileStream.CopyTo(tempFileStream);
+            }
+            File.Delete(fileName);
+            File.Move(tempFileName, fileName);
         }
     }
 }

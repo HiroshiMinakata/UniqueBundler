@@ -3,6 +3,7 @@
 * UTF-8
 * 
 * ----- Header -----
+* int mode;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -36,6 +37,7 @@
 * }
 */
 
+using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -46,6 +48,7 @@ namespace UniqueBundler
     {
         string loadFileName;
 
+        int mode;
         public int version;
         public int assetNum;
         int headerSize;
@@ -79,7 +82,7 @@ namespace UniqueBundler
         {
             try
             {
-                Read();
+                Load();
             }
             catch (Exception ex)
             {
@@ -96,7 +99,7 @@ namespace UniqueBundler
                 string tempFileName = Path.GetTempFileName();
                 DecompressFile(loadFileName, tempFileName);
                 loadFileName = tempFileName;
-                Read();
+                Load();
                 if (File.Exists(tempFileName))
                     File.Delete(tempFileName);
             }
@@ -115,7 +118,7 @@ namespace UniqueBundler
                 string tempFileName = Path.GetTempFileName();
                 AESFile(loadFileName, tempFileName, key, iv);
                 loadFileName = tempFileName;
-                Read();
+                Load();
                 if (File.Exists(tempFileName))
                     File.Delete(tempFileName);
             }
@@ -139,7 +142,7 @@ namespace UniqueBundler
                 if (File.Exists(gzipFileName))
                     File.Delete(gzipFileName);
                 loadFileName = tempFileName;
-                Read();
+                Load();
                 if (File.Exists(tempFileName))
                     File.Delete(tempFileName);
             }
@@ -152,15 +155,21 @@ namespace UniqueBundler
             return true;
         }
 
-        private void Read()
+        private void Load()
         {
             try
             {
                 using (FileStream stream = new FileStream(loadFileName, FileMode.Open, FileAccess.Read))
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
+                    if (mode == 0)
+                        stream.Seek(sizeof(int), SeekOrigin.Begin);
+
                     // Heder
                     ReadHeader(reader);
+
+                    if (mode == 0)
+                        headerSize += sizeof(int);
 
                     metaDatas = new MetaData[assetNum];
                     footers = new Footer[assetNum];
@@ -300,8 +309,11 @@ namespace UniqueBundler
         {
             using (FileStream compressedFileStream = File.OpenRead(inputFile))
             using (FileStream outputFileStream = File.Create(outputFile))
-            using (GZipStream decompressionStream = new GZipStream(compressedFileStream, CompressionMode.Decompress))
-                decompressionStream.CopyTo(outputFileStream);
+            {
+                if(mode == 1) compressedFileStream.Seek(sizeof(int), SeekOrigin.Begin);
+                using (GZipStream decompressionStream = new GZipStream(compressedFileStream, CompressionMode.Decompress))
+                    decompressionStream.CopyTo(outputFileStream);
+            }
         }
 
         public void AESFile(string inputFile, string outputFile, byte[] key, byte[] iv)
@@ -314,11 +326,21 @@ namespace UniqueBundler
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
                 using (FileStream fileStream = new FileStream(inputFile, FileMode.Open))
-                using (CryptoStream cryptoStream = new CryptoStream(fileStream, decryptor, CryptoStreamMode.Read))
-                using (FileStream outputStream = new FileStream(outputFile, FileMode.Create))
-                    cryptoStream.CopyTo(outputStream);
+                {
+                    fileStream.Seek(sizeof(int), SeekOrigin.Begin);
+                    using (CryptoStream cryptoStream = new CryptoStream(fileStream, decryptor, CryptoStreamMode.Read))
+                    using (FileStream outputStream = new FileStream(outputFile, FileMode.Create))
+                        cryptoStream.CopyTo(outputStream);
+                }
             }
         }
 
+        public int ReadFileMode()
+        {
+            using (FileStream fileStream = new FileStream(loadFileName, FileMode.Open, FileAccess.Read))
+            using (BinaryReader reader = new BinaryReader(fileStream))
+                mode = reader.ReadInt32();
+            return mode;
+        }
     }
 }

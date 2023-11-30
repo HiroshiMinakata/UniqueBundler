@@ -35,57 +35,30 @@ namespace UniqueBundler
 
         #region Event
         #region Load from file
-
-        // Normal
-        private void loadNormalBundleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
             if (loadFileName == "") return;
             LoadBundle loadBundle = new LoadBundle(loadFileName);
-            bool loaded = loadBundle.NormalRead();
-            if (loaded == false) return;
-            SetLoadData(loadBundle);
-            Version_TextBox.Text = loadBundle.version.ToString();
-            GetTempFileNames();
-        }
 
-        // GZIP
-        private void loadGZIPBundleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
-            if (loadFileName == "") return;
-            LoadBundle loadBundle = new LoadBundle(loadFileName);
-            bool loaded = loadBundle.GZIPRead();
-            if (loaded == false) return;
-            SetLoadData(loadBundle);
-            Version_TextBox.Text = loadBundle.version.ToString();
-            GetTempFileNames();
-        }
-
-        // AES
-        private void loadAESBundleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
-            if (loadFileName == "") return;
-            LoadBundle loadBundle = new LoadBundle(loadFileName);
-            PasswordForm passForm = new PasswordForm();
-            if (passForm.ShowDialog() != DialogResult.OK) return;
-            bool loaded = loadBundle.AESRead(passForm.key, passForm.iv);
-            if (loaded == false) return;
-            SetLoadData(loadBundle);
-            Version_TextBox.Text = loadBundle.version.ToString();
-            GetTempFileNames();
-        }
-
-        // GZIP and AES
-        private void loadGZIPandAESBundleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string loadFileName = GetOpenFileNames(ABFileFilter, false)[0];
-            if (loadFileName == "") return;
-            LoadBundle loadBundle = new LoadBundle(loadFileName);
-            PasswordForm passForm = new PasswordForm();
-            if (passForm.ShowDialog() != DialogResult.OK) return;
-            bool loaded = loadBundle.GZIPandAESRead(passForm.key, passForm.iv);
+            bool loaded = false;
+            int mode = loadBundle.ReadFileMode();
+            if (mode == 0)
+                loaded = loadBundle.NormalRead();
+            else if (mode == 1)
+                loaded = loadBundle.GZIPRead();
+            else if (mode == 2)
+            {
+                PasswordForm passForm = new PasswordForm();
+                if (passForm.ShowDialog() != DialogResult.OK) return;
+                loaded = loadBundle.AESRead(passForm.key, passForm.iv);
+            }
+            else if (mode == 3)
+            {
+                PasswordForm passForm = new PasswordForm();
+                if (passForm.ShowDialog() != DialogResult.OK) return;
+                loaded = loadBundle.GZIPandAESRead(passForm.key, passForm.iv);
+            }
             if (loaded == false) return;
             SetLoadData(loadBundle);
             Version_TextBox.Text = loadBundle.version.ToString();
