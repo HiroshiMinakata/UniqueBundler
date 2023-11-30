@@ -29,6 +29,8 @@ namespace UniqueBundler
             file = new FileManager();
             AssetClass.Items.AddRange(file.GetClassNames());
             InitializeData(0);
+            Size_TextBox.BackColor = Color.White;
+            Number_TextBox.BackColor = Color.White;
         }
 
         #region Event
@@ -43,6 +45,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.NormalRead();
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            Version_TextBox.Text = loadBundle.version.ToString();
             GetTempFileNames();
         }
 
@@ -55,6 +58,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.GZIPRead();
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            Version_TextBox.Text = loadBundle.version.ToString();
             GetTempFileNames();
         }
 
@@ -69,6 +73,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.AESRead(passForm.key, passForm.iv);
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            Version_TextBox.Text = loadBundle.version.ToString();
             GetTempFileNames();
         }
 
@@ -83,6 +88,7 @@ namespace UniqueBundler
             bool loaded = loadBundle.GZIPandAESRead(passForm.key, passForm.iv);
             if (loaded == false) return;
             SetLoadData(loadBundle);
+            Version_TextBox.Text = loadBundle.version.ToString();
             GetTempFileNames();
         }
 
@@ -195,8 +201,11 @@ namespace UniqueBundler
             string[] formats = new string[assetNum];
             string[] classNames = new string[assetNum];
 
+            int version = 1;
+            if (int.TryParse(Version_TextBox.Text, out int number))
+                version = number;
             GetWriteAssetsDatas(assetsDatas, assetNames, classNames, formats);
-            return new WriteBundle(1, assetNames, assetsDatas, formats, classNames, saveFileName);
+            return new WriteBundle(version, assetNames, assetsDatas, formats, classNames, saveFileName);
         }
         #endregion
 
@@ -315,9 +324,24 @@ namespace UniqueBundler
         // Closing
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(string tempFileName in tempFileNames)
+            foreach (string tempFileName in tempFileNames)
                 if (File.Exists(tempFileName))
                     File.Delete(tempFileName);
+        }
+
+        // Version Text box
+        private void Version_TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+
+            if (e.KeyChar == '0' && Version_TextBox.Text.Length == 0)
+                e.Handled = true;
+        }
+        private void Version_TextBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(Version_TextBox.Text))
+                Version_TextBox.Text = "1";
         }
         #endregion
 
@@ -535,8 +559,8 @@ namespace UniqueBundler
                 totalSize += ReloadSize(row);
                 assetNum++;
             }
-            AssetName.HeaderText = $"Name ({assetNum})";
-            AssetSize.HeaderText = "Size : " + FormatFileSize(totalSize);
+            Number_TextBox.Text = assetNum.ToString();
+            Size_TextBox.Text = FormatFileSize(totalSize);
             return totalSize;
         }
 

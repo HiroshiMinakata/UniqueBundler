@@ -54,6 +54,12 @@
             optionToolStripMenuItem = new ToolStripMenuItem();
             openClassConfigToolStripMenuItem = new ToolStripMenuItem();
             openExtensionConfigToolStripMenuItem = new ToolStripMenuItem();
+            Number_Label = new Label();
+            Version_TextBox = new TextBox();
+            Version_Label = new Label();
+            Size_Label = new Label();
+            Size_TextBox = new TextBox();
+            Number_TextBox = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -64,12 +70,12 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { AssetName, AssetExtension, AssetClass, AssetSize, AssetField, IsInclude });
-            dataGridView1.Location = new Point(20, 53);
+            dataGridView1.Location = new Point(20, 87);
             dataGridView1.Margin = new Padding(4, 2, 4, 2);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridView1.RowTemplate.Height = 41;
-            dataGridView1.Size = new Size(2201, 979);
+            dataGridView1.Size = new Size(2201, 945);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
@@ -251,11 +257,72 @@
             openExtensionConfigToolStripMenuItem.Text = "Open Extension config";
             openExtensionConfigToolStripMenuItem.Click += openExtensionConfigToolStripMenuItem_Click;
             // 
+            // Number_Label
+            // 
+            Number_Label.AutoSize = true;
+            Number_Label.Location = new Point(415, 50);
+            Number_Label.Name = "Number_Label";
+            Number_Label.Size = new Size(114, 32);
+            Number_Label.TabIndex = 2;
+            Number_Label.Text = "Number :";
+            // 
+            // Version_TextBox
+            // 
+            Version_TextBox.Location = new Point(132, 43);
+            Version_TextBox.Name = "Version_TextBox";
+            Version_TextBox.Size = new Size(98, 39);
+            Version_TextBox.TabIndex = 3;
+            Version_TextBox.Text = "1";
+            Version_TextBox.KeyPress += Version_TextBox_KeyPress;
+            Version_TextBox.Leave += Version_TextBox_Leave;
+            // 
+            // Version_Label
+            // 
+            Version_Label.AutoSize = true;
+            Version_Label.Location = new Point(21, 50);
+            Version_Label.Name = "Version_Label";
+            Version_Label.Size = new Size(105, 32);
+            Version_Label.TabIndex = 4;
+            Version_Label.Text = "Version :";
+            // 
+            // Size_Label
+            // 
+            Size_Label.AutoSize = true;
+            Size_Label.Location = new Point(236, 50);
+            Size_Label.Name = "Size_Label";
+            Size_Label.Size = new Size(69, 32);
+            Size_Label.TabIndex = 5;
+            Size_Label.Text = "Size :";
+            // 
+            // Size_TextBox
+            // 
+            Size_TextBox.Location = new Point(311, 43);
+            Size_TextBox.Name = "Size_TextBox";
+            Size_TextBox.ReadOnly = true;
+            Size_TextBox.Size = new Size(98, 39);
+            Size_TextBox.TabIndex = 6;
+            Size_TextBox.Text = "0 B";
+            // 
+            // Number_TextBox
+            // 
+            Number_TextBox.Location = new Point(535, 43);
+            Number_TextBox.Name = "Number_TextBox";
+            Number_TextBox.ReadOnly = true;
+            Number_TextBox.Size = new Size(98, 39);
+            Number_TextBox.TabIndex = 7;
+            Number_TextBox.Text = " 0";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(2242, 1054);
+            Controls.Add(Number_TextBox);
+            Controls.Add(Size_TextBox);
+            Controls.Add(Size_Label);
+            Controls.Add(Version_Label);
+            Controls.Add(Version_TextBox);
+            Controls.Add(Number_Label);
             Controls.Add(dataGridView1);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
@@ -295,5 +362,11 @@
         private ToolStripMenuItem loadAESBundleToolStripMenuItem;
         private ToolStripMenuItem loadGZIPandAESBundleToolStripMenuItem;
         private ToolStripMenuItem addFolderToolStripMenuItem;
+        private Label Number_Label;
+        private TextBox Version_TextBox;
+        private Label Version_Label;
+        private Label Size_Label;
+        private TextBox Size_TextBox;
+        private TextBox Number_TextBox;
     }
 }

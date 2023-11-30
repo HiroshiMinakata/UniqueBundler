@@ -46,7 +46,7 @@ namespace UniqueBundler
     {
         string loadFileName;
 
-        int version;
+        public int version;
         public int assetNum;
         int headerSize;
         int metaDataSize;
