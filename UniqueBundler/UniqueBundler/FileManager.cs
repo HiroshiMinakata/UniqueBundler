@@ -241,7 +241,7 @@ namespace UniqueBundler
             else if (obj is bool boolValue)
                 size += sizeof(bool);
             else if (obj is string stringValue)
-                size += sizeof(char) * stringValue.Length;
+                size += GetUTF8Size(stringValue);
             else if (obj is byte[] byteArray)
             {
                 size += sizeof(long);
@@ -418,6 +418,20 @@ namespace UniqueBundler
             }
 
             return String.Format("{0:0.##} {1}", len, sizes[order]);
+        }
+
+        public static int GetUTF8Size(string str)
+        {
+            int utf8ByteCount = Encoding.UTF8.GetByteCount(str);
+            int lengthByteCount = 1;
+            int length = utf8ByteCount;
+            while (length > 0x7F)
+            {
+                lengthByteCount++;
+                length >>= 7;
+            }
+
+            return utf8ByteCount + lengthByteCount;
         }
     }
 }

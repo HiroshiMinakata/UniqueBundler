@@ -260,20 +260,6 @@ namespace UniqueBundler
         }
         #endregion
 
-        private static int GetUTF8Size(string str)
-        {
-            int utf8ByteCount = Encoding.UTF8.GetByteCount(str);
-            int lengthByteCount = 1;
-            int length = utf8ByteCount;
-            while (length > 0x7F)
-            {
-                lengthByteCount++;
-                length >>= 7;
-            }
-
-            return utf8ByteCount + lengthByteCount;
-        }
-
         public void GZIPFile(string inputFile, string outputFile)
         {
             using (FileStream originalFileStream = File.OpenRead(inputFile))
