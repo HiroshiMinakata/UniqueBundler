@@ -31,13 +31,13 @@ namespace UniqueBundler
 
         public static byte[] CreateKeyFromPassword(string password, int keyBytes = 32)
         {
-            var key = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes("KeyPass"), 10000);
+            var key = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(password), 10000);
             return key.GetBytes(keyBytes);
         }
 
         public static byte[] CreateIVFromPassword(string password, int blockSize = 16)
         {
-            var key = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes("IVPass"), 10000);
+            var key = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(password), 10000);
             return key.GetBytes(blockSize);
         }
     }
