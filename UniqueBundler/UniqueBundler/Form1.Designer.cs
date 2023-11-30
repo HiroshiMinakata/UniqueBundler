@@ -228,7 +228,7 @@
             // Number_Label
             // 
             Number_Label.AutoSize = true;
-            Number_Label.Location = new Point(415, 50);
+            Number_Label.Location = new Point(458, 50);
             Number_Label.Name = "Number_Label";
             Number_Label.Size = new Size(114, 32);
             Number_Label.TabIndex = 2;
@@ -267,13 +267,13 @@
             Size_TextBox.Location = new Point(311, 43);
             Size_TextBox.Name = "Size_TextBox";
             Size_TextBox.ReadOnly = true;
-            Size_TextBox.Size = new Size(98, 39);
+            Size_TextBox.Size = new Size(141, 39);
             Size_TextBox.TabIndex = 6;
             Size_TextBox.Text = "0 B";
             // 
             // Number_TextBox
             // 
-            Number_TextBox.Location = new Point(535, 43);
+            Number_TextBox.Location = new Point(578, 43);
             Number_TextBox.Name = "Number_TextBox";
             Number_TextBox.ReadOnly = true;
             Number_TextBox.Size = new Size(98, 39);
