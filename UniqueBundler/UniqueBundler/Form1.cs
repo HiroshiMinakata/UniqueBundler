@@ -42,7 +42,7 @@ namespace UniqueBundler
             LoadBundle loadBundle = new LoadBundle(loadFileName);
 
             bool loaded = false;
-            int mode = loadBundle.ReadFileMode();
+            int mode = loadBundle.ReadSaveMode();
             if (mode == 0)
                 loaded = loadBundle.NormalRead();
             else if (mode == 1)

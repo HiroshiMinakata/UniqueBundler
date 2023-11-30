@@ -7,7 +7,7 @@ using System.Text;
 * UTF-8
 * 
 * ----- Header -----
-* int mode;
+* int saveMode;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -51,6 +51,7 @@ namespace UniqueBundler
         string[] classNames;
         string saveFileName;
 
+        int saveMode;
         int version;
         int assetNum;
         const int headerSize = sizeof(int) * 5 + sizeof(long);
@@ -76,7 +77,7 @@ namespace UniqueBundler
         public void NormalWrite()
         {
             Write();
-            WritePrependMode(saveFileName, 0);
+            WritePrependSaveMode(saveFileName, 0);
         }
 
         public void GZIPWrite()
@@ -87,7 +88,7 @@ namespace UniqueBundler
             GZIPFile(saveFileName, outputPath);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
-            WritePrependMode(outputPath, 1);
+            WritePrependSaveMode(outputPath, 1);
         }
 
         public void AESWrite(byte[] key, byte[] iv)
@@ -98,7 +99,7 @@ namespace UniqueBundler
             AESFile(saveFileName, outputPath, key, iv);
             if (File.Exists(saveFileName))
                 File.Delete(saveFileName);
-            WritePrependMode(outputPath, 2);
+            WritePrependSaveMode(outputPath, 2);
         }
 
         public void GZIPandAESWrite(byte[] key, byte[] iv)
@@ -113,7 +114,7 @@ namespace UniqueBundler
             AESFile(gzipFileName, outputPath, key, iv);
             if (File.Exists(gzipFileName))
                 File.Delete(gzipFileName);
-            WritePrependMode(outputPath, 3);
+            WritePrependSaveMode(outputPath, 3);
         }
 
         private void Write()
@@ -289,7 +290,7 @@ namespace UniqueBundler
             }
         }
 
-        private void WritePrependMode(string fileName, int mode)
+        private void WritePrependSaveMode(string fileName, int mode)
         {
             string tempFileName = Path.GetTempFileName();
             using (FileStream tempFileStream = new FileStream(tempFileName, FileMode.Open, FileAccess.Write))

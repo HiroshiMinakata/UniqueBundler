@@ -3,7 +3,7 @@
 * UTF-8
 * 
 * ----- Header -----
-* int mode;
+* int saveMode;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -48,7 +48,7 @@ namespace UniqueBundler
     {
         string loadFileName;
 
-        int mode;
+        int saveMode;
         public int version;
         public int assetNum;
         int headerSize;
@@ -162,14 +162,8 @@ namespace UniqueBundler
                 using (FileStream stream = new FileStream(loadFileName, FileMode.Open, FileAccess.Read))
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    if (mode == 0)
-                        stream.Seek(sizeof(int), SeekOrigin.Begin);
-
                     // Heder
-                    ReadHeader(reader);
-
-                    if (mode == 0)
-                        headerSize += sizeof(int);
+                    ReadHeader(stream, reader);
 
                     metaDatas = new MetaData[assetNum];
                     footers = new Footer[assetNum];
@@ -198,14 +192,20 @@ namespace UniqueBundler
         }
 
         #region Header
-        private void ReadHeader(BinaryReader reader)
+        private void ReadHeader(FileStream stream, BinaryReader reader)
         {
+            if (saveMode == 0)
+                stream.Seek(sizeof(int), SeekOrigin.Begin);
+
             version = reader.ReadInt32();
             assetNum = reader.ReadInt32();
             headerSize = reader.ReadInt32();
             metaDataSize = reader.ReadInt32();
             totalAssetSize = reader.ReadInt64();
             footerSize = reader.ReadInt32();
+
+            if (saveMode == 0)
+                headerSize += sizeof(int);
         }
         #endregion
 
@@ -310,7 +310,7 @@ namespace UniqueBundler
             using (FileStream compressedFileStream = File.OpenRead(inputFile))
             using (FileStream outputFileStream = File.Create(outputFile))
             {
-                if(mode == 1) compressedFileStream.Seek(sizeof(int), SeekOrigin.Begin);
+                if(saveMode == 1) compressedFileStream.Seek(sizeof(int), SeekOrigin.Begin);
                 using (GZipStream decompressionStream = new GZipStream(compressedFileStream, CompressionMode.Decompress))
                     decompressionStream.CopyTo(outputFileStream);
             }
@@ -335,12 +335,12 @@ namespace UniqueBundler
             }
         }
 
-        public int ReadFileMode()
+        public int ReadSaveMode()
         {
             using (FileStream fileStream = new FileStream(loadFileName, FileMode.Open, FileAccess.Read))
             using (BinaryReader reader = new BinaryReader(fileStream))
-                mode = reader.ReadInt32();
-            return mode;
+                saveMode = reader.ReadInt32();
+            return saveMode;
         }
     }
 }
