@@ -1,5 +1,5 @@
-# UniqueBundler
-独自のクラスや構造体をアセットバンドルにできるツールです。
+## 独自のクラスや構造体をアセットバンドルにできるツールです。
+![window](https://github.com/HiroshiMinakata/UniqueBundler/assets/152116973/6d014dc3-201a-48da-8ed8-606c97a7f8ae)
 
 ## ファイルの保存方法
 - バイナリ
@@ -8,9 +8,9 @@
 - GZIP圧縮+AES暗号化バイナリ
 
 ## 使い方
-1. `ClassConfig.yaml`と`Extensions.yaml`を[指定のフォーマット]()で設定してください。
-2. `AddFile`, `Add Folder`, もしくはドラッグアンドドロップでファイルを追加
+1. `ClassConfig.yaml`と`Extensions.yaml`を[指定のフォーマット](https://github.com/HiroshiMinakata/UniqueBundler/wiki/コンフィグフォーマット)で設定してください。
+2. `AddFile`、`Add Folder`、 もしくはドラッグアンドドロップでファイルを追加
 3. ファイルデータの必要がない場合は手動でクラスの選択と、各項目を入力してください。
-4. `Save` 保存方法を選択してください。[詳細]()
-5. 読み込む際は[ファイルフォーマット]()に従ってバイナリとして読み込んでください。
+4. `Save` 保存方法を選択してください。[詳細](https://github.com/HiroshiMinakata/UniqueBundler/wiki/保存方法)
+5. 読み込む際は[ファイルフォーマット](https://github.com/HiroshiMinakata/UniqueBundler/wiki/ファイルフォーマット)に従ってバイナリとして読み込んでください。
 6. `Load` アセットバンドルの内容を変更するには保存方法と同じ項目を選択してください。
