@@ -35,7 +35,7 @@ using System.Text;
 * ----- Footer -----
 * // for the number of Asset
 * {
-*   string format;
+*   string extension;
 *   string className;
 * }
 */

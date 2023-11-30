@@ -31,7 +31,7 @@
 * ----- Footer -----
 * // for the number of Asset
 * {
-*   string format;
+*   string extension;
 *   string className;
 * }
 */
