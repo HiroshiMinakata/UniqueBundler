@@ -8,6 +8,8 @@ using System.Text;
 * 
 * ----- Header -----
 * int saveMode;
+* string fileID;
+* int toolVersion;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -52,9 +54,11 @@ namespace UniqueBundler
         string saveFileName;
 
         int saveMode;
+        string fileID = "uab";
+        int toolVersion = 1;
         int version;
         int assetNum;
-        const int headerSize = sizeof(int) * 6 + sizeof(long);
+        const int headerSize = sizeof(int) * 7 + sizeof(long) + sizeof(byte) * 4;
         int metaDataSize;
         long totalAssetSize;
         int footerSize;
@@ -146,6 +150,8 @@ namespace UniqueBundler
         private void WriteHader(BinaryWriter writer)
         {
             // SaveMode was already written
+            writer.Write(fileID);
+            writer.Write(toolVersion);
             writer.Write(version);
             writer.Write(assetNum);
             writer.Write(headerSize);

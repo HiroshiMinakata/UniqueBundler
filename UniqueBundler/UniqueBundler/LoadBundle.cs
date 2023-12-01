@@ -4,6 +4,8 @@
 * 
 * ----- Header -----
 * int saveMode;
+* string fileID;
+* int toolVersion;
 * int varsion;
 * int assetNum;
 * int headerSize;
@@ -49,6 +51,8 @@ namespace UniqueBundler
         string loadFileName;
 
         int saveMode;
+        string fileID;
+        int toolVersion;
         public int version;
         public int assetNum;
         int headerSize;
@@ -197,6 +201,14 @@ namespace UniqueBundler
             if (saveMode == 0)
                 stream.Seek(sizeof(int), SeekOrigin.Begin);
 
+            fileID = reader.ReadString();
+            if (fileID != "uab")
+                throw new Exception("Invalid file ID. Expected 'uab'.");
+
+            toolVersion = reader.ReadInt32();
+            if (toolVersion != 1)
+                throw new Exception("Invalid tool version. 'toolVersion' should be 1, but was " + toolVersion + ".");
+
             version = reader.ReadInt32();
             assetNum = reader.ReadInt32();
             headerSize = reader.ReadInt32();
@@ -340,6 +352,7 @@ namespace UniqueBundler
             using (FileStream fileStream = new FileStream(loadFileName, FileMode.Open, FileAccess.Read))
             using (BinaryReader reader = new BinaryReader(fileStream))
                 saveMode = reader.ReadInt32();
+            if (saveMode < 0 || saveMode > 3) saveMode = 0;
             return saveMode;
         }
     }
