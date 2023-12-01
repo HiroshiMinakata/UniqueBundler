@@ -54,7 +54,7 @@ namespace UniqueBundler
         int saveMode;
         int version;
         int assetNum;
-        const int headerSize = sizeof(int) * 5 + sizeof(long);
+        const int headerSize = sizeof(int) * 6 + sizeof(long);
         int metaDataSize;
         long totalAssetSize;
         int footerSize;
@@ -76,76 +76,84 @@ namespace UniqueBundler
 
         public void NormalWrite()
         {
-            Write();
-            WritePrependSaveMode(saveFileName, 0);
+            saveMode = 0;
+            using (BinaryWriter writer = new BinaryWriter(File.Open(saveFileName, FileMode.Create)))
+            {
+                writer.Write(saveMode);
+                Write(writer);
+            }
         }
 
         public void GZIPWrite()
         {
-            string outputPath = saveFileName;
-            saveFileName = Path.GetTempFileName();
-            Write();
-            GZIPFile(saveFileName, outputPath);
-            if (File.Exists(saveFileName))
-                File.Delete(saveFileName);
-            WritePrependSaveMode(outputPath, 1);
+            saveMode = 1;
+            using (FileStream fileStream = File.Open(saveFileName, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                writer.Write(saveMode);
+                using (GZipStream gZipStream = new GZipStream(fileStream, CompressionMode.Compress))
+                using (BinaryWriter gZipWriter = new BinaryWriter(gZipStream))
+                    Write(gZipWriter);
+            }
         }
 
         public void AESWrite(byte[] key, byte[] iv)
         {
-            string outputPath = saveFileName;
-            saveFileName = Path.GetTempFileName();
-            Write();
-            AESFile(saveFileName, outputPath, key, iv);
-            if (File.Exists(saveFileName))
-                File.Delete(saveFileName);
-            WritePrependSaveMode(outputPath, 2);
+            saveMode = 2;
+            using (FileStream fileStream = File.Open(saveFileName, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                writer.Write(saveMode);
+                using (AesManaged aes = new AesManaged { Key = key, IV = iv })
+                using (CryptoStream cryptoStream = new CryptoStream(fileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                using (BinaryWriter cryptoWriter = new BinaryWriter(cryptoStream))
+                    Write(cryptoWriter);
+            }
         }
 
         public void GZIPandAESWrite(byte[] key, byte[] iv)
         {
-            string outputPath = saveFileName;
-            string gzipFileName = Path.GetTempFileName();
-            saveFileName = Path.GetTempFileName();
-            Write();
-            GZIPFile(saveFileName, gzipFileName);
-            if (File.Exists(saveFileName))
-                File.Delete(saveFileName);
-            AESFile(gzipFileName, outputPath, key, iv);
-            if (File.Exists(gzipFileName))
-                File.Delete(gzipFileName);
-            WritePrependSaveMode(outputPath, 3);
+            saveMode = 3;
+            using (FileStream fileStream = File.Open(saveFileName, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                writer.Write(saveMode);
+
+                using (AesManaged aes = new AesManaged { Key = key, IV = iv })
+                using (CryptoStream cryptoStream = new CryptoStream(fileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                using (GZipStream compressionStream = new GZipStream(cryptoStream, CompressionMode.Compress))
+                using (BinaryWriter encryptedWriter = new BinaryWriter(compressionStream))
+                    Write(encryptedWriter);
+            }
         }
 
-        private void Write()
+        private void Write(BinaryWriter writer)
         {
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(File.Open(saveFileName, FileMode.Create)))
-                {
-                    // Heder
-                    writer.Write(version);
-                    writer.Write(assetNum);
-                    writer.Write(headerSize);
-                    writer.Write(metaDataSize);
-                    writer.Write(totalAssetSize);
-                    writer.Write(footerSize);
-
-                    // MetaData
-                    WriteMetaData(writer);
-
-                    // Data
-                    WriteField(writer);
-
-                    // Footer
-                    WriteFooter(writer);
-                }
+                WriteHader(writer); // Hader
+                WriteMetaData(writer); // MetaData
+                WriteField(writer); //Field
+                WriteFooter(writer); //Footer
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to save file.\nError: " + ex.Message, "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        #region Header
+        private void WriteHader(BinaryWriter writer)
+        {
+            // SaveMode was already written
+            writer.Write(version);
+            writer.Write(assetNum);
+            writer.Write(headerSize);
+            writer.Write(metaDataSize);
+            writer.Write(totalAssetSize);
+            writer.Write(footerSize);
+        }
+        #endregion
 
         #region MetaData
         private void WriteMetaData(BinaryWriter writer)
@@ -265,43 +273,5 @@ namespace UniqueBundler
             return size;
         }
         #endregion
-
-        public void GZIPFile(string inputFile, string outputFile)
-        {
-            using (FileStream originalFileStream = File.OpenRead(inputFile))
-            using (FileStream compressedFileStream = File.Create(outputFile))
-            using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
-                originalFileStream.CopyTo(compressionStream);
-        }
-
-        public void AESFile(string inputFile, string outputFile, byte[] key, byte[] iv)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
-
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using (FileStream fileStream = new FileStream(outputFile, FileMode.Create))
-                using (CryptoStream cryptoStream = new CryptoStream(fileStream, encryptor, CryptoStreamMode.Write))
-                using (FileStream inputStream = new FileStream(inputFile, FileMode.Open))
-                    inputStream.CopyTo(cryptoStream);
-            }
-        }
-
-        private void WritePrependSaveMode(string fileName, int mode)
-        {
-            string tempFileName = Path.GetTempFileName();
-            using (FileStream tempFileStream = new FileStream(tempFileName, FileMode.Open, FileAccess.Write))
-            using (BinaryWriter writer = new BinaryWriter(tempFileStream))
-            {
-                writer.Write(mode);
-                using (FileStream originalFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-                    originalFileStream.CopyTo(tempFileStream);
-            }
-            File.Delete(fileName);
-            File.Move(tempFileName, fileName);
-        }
     }
 }

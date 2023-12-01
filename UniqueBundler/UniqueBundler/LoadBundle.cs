@@ -204,8 +204,8 @@ namespace UniqueBundler
             totalAssetSize = reader.ReadInt64();
             footerSize = reader.ReadInt32();
 
-            if (saveMode == 0)
-                headerSize += sizeof(int);
+            if (saveMode != 0)
+                headerSize -= sizeof(int);
         }
         #endregion
 
