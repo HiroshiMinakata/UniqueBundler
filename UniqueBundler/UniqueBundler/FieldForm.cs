@@ -42,6 +42,7 @@ namespace UniqueBundler
             {
                 if (dataGridView1.Rows[row].Cells[1].Value == null) dataGridView1.Rows[row].Cells[1].Value = "";
                 string data = dataGridView1.Rows[row].Cells[1].Value.ToString();
+                assetDatas[row].isUse = Convert.ToBoolean(dataGridView1.Rows[row].Cells[2].Value);
                 assetDatas[row].data = FileManager.String2Object(data, assetDatas[row].data);
                 if (assetDatas[row].data.GetType() == typeof(byte[]))
                     assetDatas[row].data = dataGridView1.Rows[row].Cells[1].Tag;
