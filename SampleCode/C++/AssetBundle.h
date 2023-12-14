@@ -68,12 +68,9 @@
 * }
 */
 
-// AssetBundle.h
-
-#pragma once
 #include <fstream>
-#include <string>
 #include <unordered_map>
+#include <string>
 #include <vector>
 
 #pragma region AssetReader
@@ -87,8 +84,6 @@ public:
 	{
 		if (getIsUse)
 			skip = !IsUse();
-
-		int a = 0;
 
 		// Get string
 		if constexpr (std::is_same<T, std::string>::value)
@@ -117,8 +112,10 @@ public:
 		}
 		else
 			(skip) ? seekg(sizeof(T), std::ios::cur) : read(reinterpret_cast<char*>(data), sizeof(T));
+#if _DEBUG
 		if (fail())
 			throw std::runtime_error("Read error: Failed to read");
+#endif
 	}
 private:
 	// for vector and not char vector
@@ -156,21 +153,30 @@ public:
 	~AssetBundle();
 
 	template <typename T>
-	T* Load(std::string name)
+	T* Load(const std::string& name)
 	{
 		T* asset = new T;
 
+#if _DEBUG
+		if (offsets.count(name) == 0)
+			throw std::runtime_error("Read error: This name does not exist");
+#endif
+
 		// Check have Decode
-		if constexpr (std::is_invocable<decltype(&T::Decode), T*, const std::string&, const int64_t&>::value)
-			asset->Decode(fileName, offsets[name]);
+		if constexpr (std::is_invocable<decltype(&T::Decode), T*, const std::string&, const int64_t&, AssetBundle*>::value)
+			asset->Decode(fileName, offsets[name], this);
+#if _DEBUG
 		else
-			static_assert(false, "Decode method is missing in the class.");
+			throw std::runtime_error("Decode method is missing in the class.");
+		//static_assert(false, "Decode method is missing in the class.");
+#endif
+
 		anyPtrMaps.emplace(name, asset);
 		return asset;
 	}
 	void FileClose();
 
-	void Unload(std::string name);
+	void Unload(const std::string& name);
 	void Unload(bool all);
 
 private:
